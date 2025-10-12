@@ -1,0 +1,61 @@
+<?php
+
+namespace  Sndpbag\AdminPanel\Http\Controllers\Auth;
+use Sndpbag\AdminPanel\Http\Controllers\Controller;
+use Sndpbag\AdminPanel\Models\User;
+ 
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+use Illuminate\View\View;
+
+
+ 
+
+class RegisteredUserController extends Controller
+{
+     /**
+     * Display the registration view.
+     * রেজিস্ট্রেশন ফর্মটি দেখানোর জন্য এই মেথড কাজ করে।
+     */
+    public function create(): View
+    {
+        return view('admin-panel::auth.register');
+    }
+
+    /**
+     * Handle an incoming registration request.
+     * রেজিস্ট্রেশন ফর্ম সাবমিট করার পর ডেটা এখানে আসে।
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        // ফর্ম থেকে আসা ডেটা validate করা হচ্ছে।
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        // নতুন ইউজার তৈরি করা হচ্ছে।
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        // একটি ইভেন্ট dispatch করা হয়, যেমন ভেরিফিকেশন ইমেল পাঠানোর জন্য।
+     // User-ke verification email pathano hobe
+        event(new Registered($user));
+
+        // --- PORIBORTON: User-ke r login korano hocche na ---
+        // Auth::login($user); 
+
+        // Login page-e ekta success message-shaho ferot pathano hocche
+        return redirect()->route('login')->with('status', 'Registration successful! Please check your email to verify your account.');
+    }
+}

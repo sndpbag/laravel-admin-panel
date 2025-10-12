@@ -1,0 +1,34 @@
+{
+    "name": "sndpbag/admin-panel",
+    "description": "This is a simple admin panel package for Laravel.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "sndp bag",
+            "email": "sndpbagg@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^12.0",
+         "barryvdh/laravel-dompdf": "^3.1",
+        "jenssegers/agent": "^2.6",
+        "maatwebsite/excel": "^3.1",
+        "stevebauman/location": "^7.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sndpbag\\AdminPanel\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sndpbag\\AdminPanel\\Providers\\AdminPanelServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
