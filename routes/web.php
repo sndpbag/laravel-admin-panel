@@ -25,86 +25,75 @@ use Sndpbag\AdminPanel\Http\Controllers\Dashboard\UserLogController;
 
 Route::middleware('web')->group(function () {
 
-    // --- Dashboard Routes ---
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::middleware('auth')->group(function () {
+        // --- Dashboard Routes ---
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Users Routes
-    Route::prefix('users')->name('users.')->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::get('/create', [UserController::class, 'create'])->name('create');
-        Route::post('/', [UserController::class, 'store'])->name('store');
-        Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
-        Route::put('/{user}', [UserController::class, 'update'])->name('update');
-        Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
-        Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggleStatus');
-        Route::patch('/{user}/toggle-role', [UserController::class, 'toggleRole'])->name('toggleRole');
-        Route::get('/export/{type}', [UserController::class, 'export'])->name('export');
-        Route::post('/import', [UserController::class, 'import'])->name('import');
-        Route::get('/import-template', [UserController::class, 'downloadTemplate'])->name('template');
-        Route::get('/trashed', [UserController::class, 'trashed'])->name('trashed');
-        Route::post('/{id}/restore', [UserController::class, 'restore'])->name('restore');
-        Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('forceDelete');
-    });
+        // Users Routes
+        Route::prefix('users')->name('users.')->group(function () {
+            Route::get('/', [UserController::class, 'index'])->name('index');
+            Route::get('/create', [UserController::class, 'create'])->name('create');
+            Route::post('/', [UserController::class, 'store'])->name('store');
+            Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+            Route::put('/{user}', [UserController::class, 'update'])->name('update');
+            Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+            Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggleStatus');
+            Route::patch('/{user}/toggle-role', [UserController::class, 'toggleRole'])->name('toggleRole');
+            Route::get('/export/{type}', [UserController::class, 'export'])->name('export');
+            Route::post('/import', [UserController::class, 'import'])->name('import');
+            Route::get('/import-template', [UserController::class, 'downloadTemplate'])->name('template');
+            Route::get('/trashed', [UserController::class, 'trashed'])->name('trashed');
+            Route::post('/{id}/restore', [UserController::class, 'restore'])->name('restore');
+            Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('forceDelete');
+        });
 
-    // Settings Routes
-    Route::prefix('settings')->name('settings.')->group(function () {
-        Route::get('/', [SettingsController::class, 'index'])->name('index');
-        Route::post('/profile', [SettingsController::class, 'updateProfile'])->name('profile.update');
-        Route::post('/password', [SettingsController::class, 'updatePassword'])->name('password.update');
-        Route::post('/theme', [SettingsController::class, 'updateTheme'])->name('theme.update');
-        Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
-        Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update');
-    });
+        // Settings Routes
+        Route::prefix('settings')->name('settings.')->group(function () {
+            Route::get('/', [SettingsController::class, 'index'])->name('index');
+            Route::post('/profile', [SettingsController::class, 'updateProfile'])->name('profile.update');
+            Route::post('/password', [SettingsController::class, 'updatePassword'])->name('password.update');
+            Route::post('/theme', [SettingsController::class, 'updateTheme'])->name('theme.update');
+            Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
+            Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update');
+        });
 
-    // User Logs Route
-    Route::get('/user-logs', [UserLogController::class, 'index'])->name('user-logs.index');
+        // User Logs Route
+        Route::get('/user-logs', [UserLogController::class, 'index'])->name('user-logs.index');
 
-    // --- Authentication Routes ---
+        // --- Authentication Routes ---
 
-    Route::middleware('guest')->group(function () {
-
-        // Register Routes
-        Route::get('register', [RegisteredUserController::class, 'create'])
-            ->name('register');
-
-        Route::post('register', [RegisteredUserController::class, 'store']);
-
-        // Login Routes
-        Route::get('login', [AuthenticatedSessionController::class, 'create'])
-            ->name('login');
-
-        Route::post('login', [AuthenticatedSessionController::class, 'store']);
-
-        // Forgot Password Routes
-        Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-            ->name('password.request');
-
-        Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-            ->name('password.email');
-
-        // Reset Password Routes
-        Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-            ->name('password.reset');
-
-        Route::post('reset-password', [NewPasswordController::class, 'store'])
-            ->name('password.update');
+       
     });
 
 
-    // Route::get('verify-email', [VerificationController::class, '__invoke'])
-    //     ->middleware('auth')
-    //     ->name('verification.notice');
+     Route::middleware('guest')->group(function () {
 
-    // // 2. User jokhon email theke link-e click kore, tokhon ei route-ti kaj kore
-    // Route::get('verify-email/{id}/{hash}', [VerificationController::class, '__invoke'])
-    //     ->middleware(['auth', 'signed', 'throttle:6,1'])
-    //     ->name('verification.verify');
+            // Register Routes
+            Route::get('register', [RegisteredUserController::class, 'create'])
+                ->name('register');
 
-    // // 3. User jokhon "Resend Verification Email" button-e click kore
-    // Route::post('email/verification-notification', [VerificationController::class, 'store'])
-    //     ->middleware(['auth', 'throttle:6,1'])
-    //     ->name('verification.send');
+            Route::post('register', [RegisteredUserController::class, 'store']);
 
+            // Login Routes
+            Route::get('login', [AuthenticatedSessionController::class, 'create'])
+                ->name('login');
+
+            Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+            // Forgot Password Routes
+            Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+                ->name('password.request');
+
+            Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+                ->name('password.email');
+
+            // Reset Password Routes
+            Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+                ->name('password.reset');
+
+            Route::post('reset-password', [NewPasswordController::class, 'store'])
+                ->name('password.update');
+        });
 
     Route::get('verify-otp', [OtpController::class, 'show'])->name('otp.show');
     Route::post('verify-otp', [OtpController::class, 'verify'])->name('otp.verify');
@@ -122,13 +111,12 @@ Route::middleware('web')->group(function () {
 
         // Notice page ebong resend email link (login kora user-der jonno)
         Route::get('verify-email', [VerificationController::class, 'notice'])->name('verification.notice');
-  
     });
 
-      Route::post('email/verification-notification', [VerificationController::class, 'send'])
-            ->middleware('throttle:6,1')
-            ->name('verification.send');
-            
+    Route::post('email/verification-notification', [VerificationController::class, 'send'])
+        ->middleware('throttle:6,1')
+        ->name('verification.send');
+
     // --- Public Verification Route (login kora chara'i kaj korbe) ---
     // Guruttwopurno: Ei route-tike 'auth' group-er baire rakha hoyeche
     Route::get('verify-email/{id}/{hash}', [VerificationController::class, 'verify'])

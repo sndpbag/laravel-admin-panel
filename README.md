@@ -37,6 +37,12 @@ You can install the package via Composer.
     ```bash
     composer require sndpbag/admin-panel
     ```
+    
+      ```bash
+    composer require sndpbag/admin-panel:dev-main
+    ```
+
+
 
 2.  **Publish Assets and Configuration:**
     This command will publish the necessary assets (JS, CSS), configuration files, and migrations to your project.
@@ -51,7 +57,14 @@ You can install the package via Composer.
     php artisan migrate
     ```
 
-4.  **Configure Mail Settings:**
+
+    4.  **Run command:**
+    Creates a symbolic link between public/storage and storage/app/public
+    ```bash
+    php artisan storage:link
+    ```
+
+5.  **Configure Mail Settings:**
     Since the package includes email verification and OTP notifications, ensure your `.env` file is configured correctly for sending emails.
     ```dotenv
     MAIL_MAILER=smtp

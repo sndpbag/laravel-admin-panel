@@ -44,7 +44,7 @@
             <p class="text-gray-600">@yield('page-heading')</p>
         </div>
 
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+         <div class="w-full {{ Request::is('login') || Request::is('register') ||Request::is('verify-otp') || Request::is('forgot-password')|| Request::is('reset-password/*') ? 'max-w-md' : '' }} bg-white rounded-2xl shadow-xl p-8">
             @yield('content')
         </div>
 

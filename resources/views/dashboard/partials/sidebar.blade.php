@@ -1,6 +1,6 @@
 <aside id="sidebar"
     class="sidebar flex flex-col sidebar-closed md:sidebar-open fixed left-0 top-0 h-full w-72 bg-white shadow-2xl z-50">
-    <div class="gradient-bg p-6 text-white">
+    <div class=" p-6 text-white" style="background-color: var(--primary);">
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold">Dashboard</h1>
             <button id="closeSidebar" class="md:hidden text-white">
