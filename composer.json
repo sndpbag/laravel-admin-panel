@@ -1,7 +1,7 @@
 {
     "name": "sndpbag/admin-panel",
     "description": "This is a simple admin panel package for Laravel.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "type": "library",
     "license": "MIT",
     "authors": [
