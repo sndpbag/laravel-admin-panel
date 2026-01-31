@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 // Namespace for Auth Controllers
 use Sndpbag\AdminPanel\Http\Controllers\Auth\AuthenticatedSessionController;
+use Sndpbag\AdminPanel\Http\Controllers\Auth\CaptchaController;
 use Sndpbag\AdminPanel\Http\Controllers\Auth\NewPasswordController;
 use Sndpbag\AdminPanel\Http\Controllers\Auth\OtpController;
 use Sndpbag\AdminPanel\Http\Controllers\Auth\PasswordResetLinkController;
@@ -62,41 +63,45 @@ Route::middleware('web')->group(function () {
 
         // --- Authentication Routes ---
 
-       
+
     });
 
 
-     Route::middleware('guest')->group(function () {
+    Route::middleware('guest')->group(function () {
 
-            // Register Routes
-            Route::get('register', [RegisteredUserController::class, 'create'])
-                ->name('register');
 
-            Route::post('register', [RegisteredUserController::class, 'store']);
+        // Register Routes
+        Route::get('register', [RegisteredUserController::class, 'create'])
+            ->name('register');
 
-            // Login Routes
-            Route::get('login', [AuthenticatedSessionController::class, 'create'])
-                ->name('login');
+        Route::post('register', [RegisteredUserController::class, 'store']);
 
-            Route::post('login', [AuthenticatedSessionController::class, 'store']);
+        // login captcha
+        Route::get('captcha-gen', [CaptchaController::class, 'generate'])->name('captcha.generate');
+        // Login Routes
+        Route::get('login', [AuthenticatedSessionController::class, 'create'])
+            ->name('login');
 
-            // Forgot Password Routes
-            Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-                ->name('password.request');
+        Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-            Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-                ->name('password.email');
+        // Forgot Password Routes
+        Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+            ->name('password.request');
 
-            // Reset Password Routes
-            Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-                ->name('password.reset');
+        Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+            ->name('password.email');
 
-            Route::post('reset-password', [NewPasswordController::class, 'store'])
-                ->name('password.update');
-        });
+        // Reset Password Routes
+        Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+            ->name('password.reset');
+
+        Route::post('reset-password', [NewPasswordController::class, 'store'])
+            ->name('password.update');
+    });
 
     Route::get('verify-otp', [OtpController::class, 'show'])->name('otp.show');
     Route::post('verify-otp', [OtpController::class, 'verify'])->name('otp.verify');
+    Route::post('verify-otp/resend', [OtpController::class, 'resend'])->name('otp.resend');
 
 
 

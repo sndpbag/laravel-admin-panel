@@ -1,0 +1,31 @@
+# Composer dependencies
+/vendor/
+
+# Environment files
+.env
+.env.*
+
+# Node modules (যদি ব্যবহার করো)
+node_modules/
+
+# Laravel storage & cache
+/storage/*.key
+/storage/framework/*
+!/storage/framework/.gitignore
+!/storage/framework/sessions
+!/storage/framework/views
+!/storage/framework/cache
+
+# Logs
+*.log
+
+# IDE / Editor files
+/.idea
+/.vscode
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# PHPUnit
+.phpunit.result.cache

@@ -6,6 +6,10 @@
 
 A feature-rich, ready-to-use admin panel for Laravel applications, designed to be both powerful and easy to customize. This package provides a complete backend solution with a beautiful UI, secure authentication, user management, and much more, right out of the box.
 
+## Requirements
+- PHP 8.1+
+- GD Extension (Required for Captcha functionality)
+
 
 ## Features
 
