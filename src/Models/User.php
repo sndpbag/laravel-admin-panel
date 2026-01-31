@@ -18,10 +18,10 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var list<string>
      */
-     protected $table = 'users';
-     
+    protected $table = 'users';
+
     protected $fillable = [
-         'name',
+        'name',
         'email',
         'password',
         'phone',
@@ -34,12 +34,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'provider_id',
         'last_seen_at',
         'otp',
-        'otp_expires_at'
+        'otp_expires_at',
+        'theme_settings'
     ];
 
 
 
-    
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -61,9 +62,10 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-             'notification_settings' => 'array', // <-- Cast JSON to array
+            'notification_settings' => 'array', // <-- Cast JSON to array
             'last_seen_at' => 'datetime',
-            'otp_expires_at'=> 'datetime',
+            'otp_expires_at' => 'datetime',
+            'theme_settings' => 'array',
         ];
     }
 }

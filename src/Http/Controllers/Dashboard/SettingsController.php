@@ -3,8 +3,8 @@
 namespace Sndpbag\AdminPanel\Http\Controllers\Dashboard;
 
 use Sndpbag\AdminPanel\Http\Controllers\Controller;
- 
- 
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -12,21 +12,24 @@ use Intervention\Image\Facades\Image;
 
 class SettingsController extends Controller
 {
-  public function index()
+    public function index()
     {
-     $user = auth()->user();
+        $user = auth()->user();
 
         // Database থেকে theme settings লোড করা, না থাকলে ডিফল্ট মান ব্যবহার করা
-        $settings = session('theme_settings', [
+        $defaultSettings = [
             'primary_color' => '#1A685B',
             'secondary_color' => '#FF5528',
             'accent_color' => '#FFAC00',
             'font_family' => "'Poppins', sans-serif",
             'font_size' => 'md',
-        ]);
+            'dark_mode' => false,
+        ];
+
+        $settings = array_merge($defaultSettings, $user->theme_settings ?? []);
 
 
-        
+
         // ১. একটি ডিফল্ট অ্যারে তৈরি করা হচ্ছে, যা নিশ্চিত করবে সব key সবসময় থাকবে
         $defaultNotifications = [
             'email' => false,
@@ -37,7 +40,7 @@ class SettingsController extends Controller
 
         // ২. ডাটাবেস থেকে raw ডেটা লোড করা হচ্ছে
         $userNotificationsData = $user->notification_settings;
-        
+
         // ৩. একটি খালি অ্যারে তৈরি করা হচ্ছে ডেটা রাখার জন্য
         $userSettingsArray = [];
 
@@ -67,7 +70,7 @@ class SettingsController extends Controller
 
         // Update profile logic here
         auth()->user()->update($validated);
-        
+
         return redirect()->back()->with('success', 'Profile updated successfully!');
     }
 
@@ -85,55 +88,60 @@ class SettingsController extends Controller
 
         // Update password logic here
         auth()->user()->update(['password' => Hash::make($validated['new_password'])]);
-        
+
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
 
     public function updateTheme(Request $request)
     {
         $validated = $request->validate([
-            'primary_color' => 'required|string',
-            'secondary_color' => 'required|string',
-            'accent_color' => 'required|string',
-            'font_family' => 'required|string',
-            'font_size' => 'required|in:sm,md,lg',
+            'primary_color' => 'sometimes|string',
+            'secondary_color' => 'sometimes|string',
+            'accent_color' => 'sometimes|string',
+            'font_family' => 'sometimes|string',
+            'font_size' => 'sometimes|in:sm,md,lg',
+            'dark_mode' => 'nullable', // Allow boolean or 'system' string
         ]);
 
-        // Save theme settings to database or session
-        session(['theme' => $validated]);
-        
+        // Save theme settings to database
+        $user = auth()->user();
+        $currentSettings = $user->theme_settings ?? [];
+        $newSettings = array_merge($currentSettings, $validated);
+
+        $user->update(['theme_settings' => $newSettings]);
+
         return response()->json(['success' => true, 'message' => 'Theme applied successfully!']);
     }
 
     public function updateNotifications(Request $request)
     {
-       $user = auth()->user();
+        $user = auth()->user();
 
-    // পুরনো সেটিংস নাও
-    $oldSettings = $user->notification_settings ?? [];
+        // পুরনো সেটিংস নাও
+        $oldSettings = $user->notification_settings ?? [];
 
-    // নতুন মানগুলো request থেকে নাও
-    $newSettings = [
-        'email' => $request->has('email'),
-        'push' => $request->has('push'),
-        'sms' => $request->has('sms'),
-        'weekly' => $request->has('weekly'),
-    ];
+        // নতুন মানগুলো request থেকে নাও
+        $newSettings = [
+            'email' => $request->has('email'),
+            'push' => $request->has('push'),
+            'sms' => $request->has('sms'),
+            'weekly' => $request->has('weekly'),
+        ];
 
-    // পুরনো সেটিংসের সাথে নতুনগুলো merge করো
-    $updatedSettings = array_merge($oldSettings, $newSettings);
+        // পুরনো সেটিংসের সাথে নতুনগুলো merge করো
+        $updatedSettings = array_merge($oldSettings, $newSettings);
 
-    // আপডেট করো
-    $user->update([
-        'notification_settings' => $updatedSettings
-    ]);
+        // আপডেট করো
+        $user->update([
+            'notification_settings' => $updatedSettings
+        ]);
 
-    return response()->json(['success' => true]);
+        return response()->json(['success' => true]);
     }
 
-    
 
-     public function updateProfileImage(Request $request)
+
+    public function updateProfileImage(Request $request)
     {
         $request->validate([
             'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',

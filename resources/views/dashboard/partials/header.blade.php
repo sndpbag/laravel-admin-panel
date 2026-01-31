@@ -9,14 +9,21 @@
         <h2 class="text-xl font-bold text-gray-800 hidden md:block">@yield('page-title', 'Your Dashboard')</h2>
 
         <div class="flex items-center gap-3">
-            <button id="darkModeBtn" class="p-2 rounded-lg hover:bg-gray-100 transition">
-                <svg id="moonIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button id="darkModeBtn" class="p-2 rounded-lg hover:bg-gray-100 transition relative">
+                <!-- Moon for Dark Mode -->
+                <svg id="moonIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
+                <!-- Sun for Light Mode -->
                 <svg id="sunIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <!-- Computer for System Mode -->
+                <svg id="systemIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
             </button>
 
@@ -29,34 +36,29 @@
             </button>
 
             <div class="hidden sm:flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
-                  <!-- 👤 Profile Image -->
-    <div class="relative">
-        {{-- <img 
-            src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default-avatar.jpeg') }}" 
-            alt="Profile"
-            class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition"
-        > --}}
+                <!-- 👤 Profile Image -->
+                <div class="relative">
+                    {{-- <img
+                        src="{{ auth()->user()->profile_image ? asset('storage/' . auth()->user()->profile_image) : asset('images/default-avatar.jpeg') }}"
+                        alt="Profile"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition">
+                    --}}
 
-        @if(auth()->check())
-    <img 
-        src="{{ auth()->user()->profile_image 
-            ? asset('storage/' . auth()->user()->profile_image) 
-            : asset('images/default-avatar.jpeg') }}" 
-        alt="Profile"
-        class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition"
-    >
-@else
-    <img 
-        src="{{ asset('images/default-avatar.jpeg') }}" 
-        alt="Default Profile"
-        class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition"
-    >
-@endif
+                    @if(auth()->check())
+                                    <img src="{{ auth()->user()->profile_image
+                        ? asset('storage/' . auth()->user()->profile_image)
+                        : asset('images/default-avatar.jpeg') }}" alt="Profile"
+                                        class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition">
+                    @else
+                        <img src="{{ asset('images/default-avatar.jpeg') }}" alt="Default Profile"
+                            class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition">
+                    @endif
 
 
-        <!-- Green dot if active -->
-        <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
-    </div>
+                    <!-- Green dot if active -->
+                    <span
+                        class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
+                </div>
                 <div>
                     @if (auth()->check())
                         <p class="text-sm font-semibold text-gray-800">{{ auth()->user()->name }}</p>
@@ -72,14 +74,14 @@
 
             <form method="POST" action="{{ route('logout') }}" class="inline">
                 {{-- <form method="POST" action=" " class="inline"> --}}
-                @csrf
-                <button type="submit" class="p-2 rounded-lg hover:bg-red-50 transition text-red-500">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                </button>
-            </form>
+                    @csrf
+                    <button type="submit" class="p-2 rounded-lg hover:bg-red-50 transition text-red-500">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
+                </form>
         </div>
     </div>
 </header>
