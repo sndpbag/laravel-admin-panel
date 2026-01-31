@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - SNDP Bag</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.125rem;
+            color: #4b5563;
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background-color: #1A685B;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover {
+            background-color: #145046;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #111827;
+                color: #f9fafb;
+            }
+
+            h1 {
+                color: #f9fafb;
+            }
+
+            p {
+                color: #9ca3af;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="icon">📡</div>
+    <h1>You are Offline</h1>
+    <p>It seems you lost your internet connection. But don't worry, you can still access pages you've visited
+        previously.</p>
+    <button onclick="window.location.reload()" class="btn">Try to Reconnect</button>
+</body>
+
+</html>

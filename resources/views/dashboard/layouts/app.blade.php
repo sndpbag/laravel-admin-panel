@@ -14,6 +14,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="{{ $primary }}">
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/icons/icon-192x192.png') }}">
     <title>@yield('title', 'sndp-bag Dashboard')</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -393,11 +396,11 @@
 
 <body class="bg-gray-50 preload">
     <script>
-        (function() {
+        (function () {
             const isDark = {!! json_encode($isDark) !!};
             const applyDark = () => document.body.classList.add('dark');
             const removeDark = () => document.body.classList.remove('dark');
-            
+
             if (isDark === 'system') {
                 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                     applyDark();
@@ -409,14 +412,14 @@
             } else {
                 removeDark();
             }
-            
+
             // Allow transitions after initial paint
             setTimeout(() => {
                 document.body.classList.remove('preload');
             }, 100);
         })();
     </script>
-    
+
     @include('admin-panel::dashboard.partials.sidebar')
 
     <div class="md:ml-72 min-h-screen flex flex-col">
@@ -435,6 +438,20 @@
     <script src="{{ asset('vendor/admin-panel/js/dashboard.js') }}"></script>
 
     @stack('scripts')
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
 </body>
 
 </html>

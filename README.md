@@ -4,36 +4,48 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/sndpbag/admin-panel.svg?style=flat-square)](https://packagist.org/packages/sndpbag/admin-panel)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-A feature-rich, ready-to-use admin panel for Laravel applications, designed to be both powerful and easy to customize. This package provides a complete backend solution with a beautiful UI, secure authentication, user management, and much more, right out of the box.
+A feature-rich, ready-to-use admin panel for Laravel applications, designed to be both powerful and easy to customize. This package provides a complete backend solution with a beautiful UI, secure authentication, user management, PWA support, and much more, right out of the box.
 
 ## Requirements
 - PHP 8.1+
+- Laravel 10.0+
 - GD Extension (Required for Captcha functionality)
 
-
-## Features
+## 🚀 Features
 
 This admin panel is packed with features to help you build your application faster:
 
+### 🔐 Security & Authentication
 -   **Secure Authentication:** Complete auth scaffolding including registration, login, password reset, and email verification.
--   **Two-Factor Authentication (2FA):** OTP-based login for enhanced security.
--   **Full User Management:**
-    -   CRUD operations for users.
-    -   Soft Deletes with a trash view to restore or permanently delete users.
-    -   Advanced search and filtering by status or role.
-    -   Quickly toggle user status (Active/Inactive) and role (Admin/User) with a single click.
--   **Data Management:**
-    -   **Export:** Export user data to PDF, XLSX, or CSV formats, respecting applied filters.
-    -   **Import:** Bulk create users by importing data from an Excel/CSV file with validation.
--   **User Activity Logging:** Automatically logs detailed user login activity, including IP address, location (city/country), and device (browser, platform).
--   **Customizable Dashboard:**
-    -   A beautiful, modern dashboard layout.
-    -   Theme customization settings to change colors and fonts.
-    -   Config-driven sidebar menu, allowing you to add new navigation items without touching the package code.
--   **Profile Management:** Users can update their profile information, change their password, and manage notification settings.
--   **Modern UI/UX:** Built with Tailwind CSS, featuring a responsive design, skeleton loaders for a better UX, and a dark mode toggle.
+-   **Two-Factor Authentication (OTP):** Secure login with OTP-based 2FA.
+-   **Captcha Protection:** Built-in captcha for login and registration forms.
 
-## Installation
+### 👤 User Management
+-   **CRUD Operations:** Create, Read, Update, and Delete users easily.
+-   **Role Management:** Assign Admin or User roles with a single click.
+-   **Soft Deletes:** Trash system to restore or permanently delete users.
+-   **Advanced Filtering:** Filter users by status, role, or search keywords.
+-   **Activity Logging:** Tracks user login activity (IP, Location, Device).
+
+### 🎨 Theme & Customization (New!)
+-   **Dynamic Themes:** Customize Primary, Secondary, and Accent colors directly from the dashboard.
+-   **Dark Mode 3.0:** Toggle between **Light**, **Dark**, and **System (Auto)** modes.
+-   **Persistent Settings:** Theme preferences are saved to the database and sync across devices.
+-   **Font Customization:** Choose from multiple font families (Poppins, Inter, Roboto).
+
+### 📱 PWA (Progressive Web App) Support (New!)
+-   **Installable:** Users can install the dashboard as an app on Desktop and Mobile.
+-   **Offline Mode:** Works even when the internet is down (displays cached pages/offline fallback).
+-   **Fast Loading:** Service Worker caches static assets for instant load times.
+
+### 🛠️ Developer Friendly
+-   **Config-Driven Sidebar:** Add menu items via `config/admin-panel.php` without touching core code.
+-   **View Customization:** Publish and modify blade views to match your design.
+-   **Data Export:** Export user lists to PDF, CSV, or Excel.
+
+---
+
+## 📦 Installation
 
 You can install the package via Composer.
 
@@ -41,35 +53,27 @@ You can install the package via Composer.
     ```bash
     composer require sndpbag/admin-panel
     ```
-    
-      ```bash
-    composer require sndpbag/admin-panel:dev-main
-    ```
-
-
 
 2.  **Publish Assets and Configuration:**
-    This command will publish the necessary assets (JS, CSS), configuration files, and migrations to your project.
+    This command will publish the necessary assets (JS, CSS), configuration files, and migrations.
     ```bash
     php artisan vendor:publish --provider="Sndpbag\AdminPanel\Providers\AdminPanelServiceProvider"
     ```
-    *You can also publish assets and configs separately using the tags `admin-panel-assets` and `admin-panel-config`.*
 
 3.  **Run Migrations:**
-    This will create the necessary tables in your database, including `users`, `user_logs`, and others.
+    Create the necessary tables in your database.
     ```bash
     php artisan migrate
     ```
 
-
-    4.  **Run command:**
-    Creates a symbolic link between public/storage and storage/app/public
+4.  **Link Storage:**
+    Link the storage folder to public for profile images and uploads.
     ```bash
     php artisan storage:link
     ```
 
 5.  **Configure Mail Settings:**
-    Since the package includes email verification and OTP notifications, ensure your `.env` file is configured correctly for sending emails.
+    Ensure your `.env` file is configured for verified emails and OTPs.
     ```dotenv
     MAIL_MAILER=smtp
     MAIL_HOST=smtp.mailtrap.io
@@ -81,48 +85,62 @@ You can install the package via Composer.
     MAIL_FROM_NAME="${APP_NAME}"
     ```
 
-## Usage
+---
 
-After installation, you can access the admin panel by visiting the following routes:
+## 📖 Usage
 
--   **Login:** `your-app-url/login`
--   **Register:** `your-app-url/register`
--   **Dashboard:** `your-app-url/dashboard` (requires login)
+Access the admin panel at:
 
-### Customizing the Sidebar
+-   **Login:** `/login`
+-   **Register:** `/register`
+-   **Dashboard:** `/dashboard`
 
-You can easily add new items to the dashboard sidebar without modifying the package's code.
+### Customizing Views
+If you need to modify the design or logic of the dashboard views, you can publish them to your resources folder:
 
-1.  First, publish the configuration file if you haven't already:
-    ```bash
-    php artisan vendor:publish --tag="admin-panel-config"
-    ```
+```bash
+php artisan vendor:publish --tag=admin-panel-views
+```
+Files will be copied to `resources/views/vendor/admin-panel`. Any changes here will override the package defaults.
 
-2.  Now, open `config/admin-panel.php` in your project and add a new entry to the `sidebar` array. For example, to add a "Products" link:
-    ```php
-    'sidebar' => [
-        // ... default menu items
-        [
-            'title' => 'Products',
-            'route' => 'products.index', // Make sure this route exists in your project
-            'icon' => '<svg class="w-6 h-6" ...>...</svg>', // Your custom SVG icon
-            'active_on' => 'products.*' // The link will be active on routes like products.index, products.create, etc.
-        ],
-    ]
-    ```
+### PWA Setup (Manual Step)
+The package includes PWA assets, but you need to add your own icons:
+1.  Navigate to `public/images/icons/`.
+2.  Add your app icons (must be named `icon-192x192.png` and `icon-512x512.png` etc).
+
+
+### Adding Sidebar Items
+Open `config/admin-panel.php` and add to the `sidebar` array:
+
+```php
+'sidebar' => [
+    // ...
+    [
+        'title' => 'My Page',
+        'route' => 'my.route',
+        'icon' => '<svg>...</svg>',
+        'active_on' => 'my.route*'
+    ],
+]
+```
 
 ### Extending the Layout
-
-You can use the admin panel's beautiful layout for your own pages. In your Blade view, simply extend the package's layout:
+To create your own pages using the dashboard layout:
 
 ```blade
 @extends('admin-panel::dashboard.layouts.app')
 
-@section('title', 'My Custom Page')
-@section('page-title', 'Page Title Here')
+@section('title', 'My Page')
 
 @section('content')
-    <div class="bg-white p-6 rounded-2xl shadow-lg">
-        <h1 class="text-2xl">Hello from my custom page!</h1>
+    <div class="card">
+        <h1>Welcome to My Custom Page</h1>
     </div>
 @endsection
+```
+
+---
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
