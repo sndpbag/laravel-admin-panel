@@ -65,7 +65,15 @@ Route::middleware('web')->group(function () {
         });
 
         // Roles & Permissions Routes
-        Route::resource('roles', \Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class);
+        // Roles & Permissions Routes
+        Route::prefix('roles')->name('roles.')->group(function () {
+            Route::get('/', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'index'])->name('index')->middleware('can:roles.index');
+            Route::get('/create', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'create'])->name('create')->middleware('can:roles.create');
+            Route::post('/', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'store'])->name('store')->middleware('can:roles.store');
+            Route::get('/{role}/edit', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'edit'])->name('edit')->middleware('can:roles.edit');
+            Route::put('/{role}', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'update'])->name('update')->middleware('can:roles.update');
+            Route::delete('/{role}', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'destroy'])->name('destroy')->middleware('can:roles.destroy');
+        });
 
         // User Logs Route
         Route::get('/user-logs', [UserLogController::class, 'index'])->name('user-logs.index');

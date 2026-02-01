@@ -59,6 +59,24 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Default 'user' role assign kora logic
+        // Role na thakle jeno create hoy ebong kono error na dey
+        $roleName = 'user';
+        $role = \Sndpbag\AdminPanel\Models\Role::where('slug', $roleName)->first();
+
+        if (!$role) {
+            $role = \Sndpbag\AdminPanel\Models\Role::create([
+                'name' => 'User',
+                'slug' => $roleName,
+                'description' => 'Default user role',
+            ]);
+        }
+
+        // Role assign kora
+        if ($user && method_exists($user, 'roles')) {
+            $user->roles()->attach($role->id);
+        }
+
         // একটি ইভেন্ট dispatch করা হয়, যেমন ভেরিফিকেশন ইমেল পাঠানোর জন্য।
         event(new Registered($user));
 
