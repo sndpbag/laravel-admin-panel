@@ -247,30 +247,18 @@
                                     </div>
                                 </td>
                                 <td class="px-8 py-6">
-                                    <form action="{{ route('users.toggleRole', $user->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5
-                                                                                                            @if ($user->role == 'Admin') text-white hover:opacity-90"
-                                                                                                            style="background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);" @else
-                                            text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200" @endif>
-                                            @if ($user->role == 'Admin')
-                                                <svg class="w-3
-                                                                                                                                            h-3"
-                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                                </svg>
-                                            @else
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                </svg>
-                                            @endif
-                                            {{ $user->role }}
-                                        </button>
-                                    </form>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach ($roles as $role)
+                                            <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                                                <input type="checkbox" value="{{ $role->slug }}"
+                                                    onchange="updateUserRole(this, '{{ $user->id }}')"
+                                                    class="role-checkbox-{{ $user->id }} form-checkbox w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                                                    {{ $user->hasRole($role->slug) ? 'checked' : '' }}>
+                                                <span
+                                                    class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ $role->slug }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
                                 </td>
                                 <td class="px-8 py-6">
                                     <form action="{{ route('users.toggleStatus', $user->id) }}" method="POST">
@@ -278,13 +266,13 @@
                                         @method('PATCH')
                                         <button type="submit"
                                             class="inline-flex items-center justify-center gap-1.5 w-24 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5
-                                                                                                            @if ($user->status == 'Active') bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 border border-green-200"
-                                                                                                            @else bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200
+                                                                                                                                                                                                    @if ($user->status == 'Active') bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 border border-green-200"
+                                                                                                                                                                                                    @else bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200
                                             hover:to-gray-300 border border-gray-300" @endif>
                                             @if ($user->status == 'Active')
                                                 <span
                                                     class="w-1.5
-                                                                                                                                    h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                                                                                                                                                                                                                                                h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                                             @else
                                                 <span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
                                             @endif
@@ -364,6 +352,68 @@
     @include('admin-panel::dashboard.partials.delete_modal')
     @include('admin-panel::dashboard.partials.import_modal')
 
+    <!-- Role Update Confirmation Modal -->
+    <div id="roleConfirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden"
+        aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 transform transition-all">
+            <div class="p-8">
+                <div class="text-center">
+                    {{-- Icon --}}
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100">
+                        <svg class="h-8 w-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                    </div>
+                    {{-- Content --}}
+                    <h3 class="mt-5 text-2xl font-bold text-gray-900" id="role-modal-title">Confirm Role Change</h3>
+                    <div class="mt-2">
+                        <p class="text-gray-600">Are you sure you want to update the roles for this user?</p>
+                    </div>
+                </div>
+            </div>
+            {{-- Action Buttons --}}
+            <div class="bg-gray-50 rounded-b-2xl px-6 py-4 flex justify-end gap-3">
+                <button type="button" id="cancelRoleModalBtn"
+                    class="px-6 py-3 rounded-xl text-gray-700 bg-gray-200 hover:bg-gray-300 font-semibold transition">
+                    No, Cancel
+                </button>
+                <button type="button" id="confirmRoleBtn"
+                    class="px-6 py-3 rounded-xl text-white font-semibold hover:shadow-lg transition bg-indigo-600 hover:bg-indigo-700">
+                    Yes, Update
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="roleSuccessModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden"
+        aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 transform transition-all">
+            <div class="p-8">
+                <div class="text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                        <svg class="h-8 w-8 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h3 class="mt-5 text-2xl font-bold text-gray-900">Success!</h3>
+                    <div class="mt-2">
+                        <p class="text-gray-600" id="roleSuccessMessage">Roles updated successfully.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 rounded-b-2xl px-6 py-4 flex justify-center">
+                <button type="button" onclick="document.getElementById('roleSuccessModal').classList.add('hidden')"
+                    class="px-6 py-3 rounded-xl text-white font-semibold hover:shadow-lg transition bg-green-600 hover:bg-green-700 w-full">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Permissions Modal -->
     <div id="permissionsModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
         aria-modal="true">
@@ -383,8 +433,8 @@
                         </svg>
                     </button>
                 </div>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Managing Direct Permissions for: <span
-                        id="permissionUserName" class="font-bold text-gray-900 dark:text-gray-200"></span></p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Managing Direct Permissions
+                    for: <span id="permissionUserName" class="font-bold text-gray-900 dark:text-gray-200"></span></p>
                 <form id="permissionsForm" method="POST">
                     @csrf
                     @method('PUT')
@@ -443,6 +493,86 @@
             function closePermissionsModal() {
                 document.getElementById('permissionsModal').classList.add('hidden');
             }
+
+            let pendingRoleUpdate = null;
+
+            function updateUserRole(checkboxElement, userId) {
+                // Store state for confirmation
+                pendingRoleUpdate = {
+                    checkboxElement: checkboxElement,
+                    userId: userId,
+                    wasChecked: checkboxElement.checked
+                };
+
+                // Show confirmation modal
+                document.getElementById('roleConfirmModal').classList.remove('hidden');
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const roleModal = document.getElementById('roleConfirmModal');
+                const cancelRoleBtn = document.getElementById('cancelRoleModalBtn');
+                const confirmRoleBtn = document.getElementById('confirmRoleBtn');
+
+                // Cancel button
+                cancelRoleBtn.addEventListener('click', function () {
+                    roleModal.classList.add('hidden');
+                    // Revert checkbox state
+                    if (pendingRoleUpdate) {
+                        pendingRoleUpdate.checkboxElement.checked = !pendingRoleUpdate.wasChecked;
+                        pendingRoleUpdate = null;
+                    }
+                });
+
+                // Confirm button
+                if (confirmRoleBtn) {
+                    confirmRoleBtn.addEventListener('click', async function () {
+                        if (!pendingRoleUpdate) return;
+
+                        const userId = pendingRoleUpdate.userId;
+                        const checkboxes = document.querySelectorAll(`.role-checkbox-${userId}:checked`);
+                        const selectedRoles = Array.from(checkboxes).map(cb => cb.value);
+                        const allCheckboxes = document.querySelectorAll(`.role-checkbox-${userId}`);
+
+                        roleModal.classList.add('hidden');
+
+                        // Disable checkboxes during update
+                        allCheckboxes.forEach(cb => cb.disabled = true);
+
+                        try {
+                            const url = "{{ route('users.role.update', ':id') }}".replace(':id', userId);
+                            const response = await fetch(url, {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify({ roles: selectedRoles })
+                            });
+
+                            const data = await response.json();
+
+                            if (response.ok && data.success) {
+                                // Show Success Modal
+                                document.getElementById('roleSuccessMessage').textContent = data.message;
+                                document.getElementById('roleSuccessModal').classList.remove('hidden');
+                            } else {
+                                throw new Error(data.message || 'Failed to update roles');
+                            }
+                        } catch (error) {
+                            console.error('Error updating roles:', error);
+                            alert('Failed to update: ' + error.message);
+                            // Revert on error
+                            if (pendingRoleUpdate) {
+                                pendingRoleUpdate.checkboxElement.checked = !pendingRoleUpdate.wasChecked;
+                            }
+                        } finally {
+                            allCheckboxes.forEach(cb => cb.disabled = false);
+                            pendingRoleUpdate = null;
+                        }
+                    });
+                }
+            });
         </script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {

@@ -49,6 +49,9 @@ Route::middleware('web')->group(function () {
 
             // Permissions Management
             Route::put('/{user}/permissions', [UserController::class, 'updatePermissions'])->name('permissions.update');
+
+            // Role Management (AJAX)
+            Route::patch('/{user}/role', [UserController::class, 'updateRole'])->name('role.update');
         });
 
         // Settings Routes

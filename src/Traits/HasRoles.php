@@ -96,6 +96,20 @@ trait HasRoles
     }
 
     /**
+     * Sync roles for the user (replace all existing roles).
+     * Accepts a slug or an array of slugs.
+     */
+    public function syncRoles($roles)
+    {
+        if (is_string($roles)) {
+            $roles = [$roles];
+        }
+
+        $roleIds = Role::whereIn('slug', $roles)->pluck('id')->toArray();
+        $this->roles()->sync($roleIds);
+    }
+
+    /**
      * Give direct permission to user.
      */
     public function givePermission($permissionSlug)

@@ -55,9 +55,10 @@ class UserController extends Controller
 
         // Pass permissions for the modal
         $permissions = \Sndpbag\AdminPanel\Models\Permission::all();
+        $roles = \Sndpbag\AdminPanel\Models\Role::all();
 
         // Pass all request inputs to the view for filter persistence
-        return view('admin-panel::dashboard.users.index', compact('users', 'permissions'))->with('request', $request->all());
+        return view('admin-panel::dashboard.users.index', compact('users', 'permissions', 'roles'))->with('request', $request->all());
     }
 
     /**
@@ -75,6 +76,40 @@ class UserController extends Controller
         $user->permissions()->sync($request->permissions ?? []);
 
         return back()->with('success', 'User permissions updated successfully!');
+    }
+
+    /**
+     * Update the user's role via AJAX.
+     */
+    public function updateRole(Request $request, User $user)
+    {
+        $request->validate([
+            'roles' => 'nullable|array',
+            'roles.*' => 'string'
+        ]);
+
+        $roles = $request->roles ?? [];
+
+        // Sync the roles using our custom trait method
+        $user->syncRoles($roles);
+
+        // Update the legacy role column for consistency
+        // Pick the first role's name if available
+        $firstRole = \Sndpbag\AdminPanel\Models\Role::where('slug', $roles[0] ?? '')->first();
+
+        if ($firstRole) {
+            $user->role = $firstRole->name;
+        } else if (empty($roles)) {
+            // If no roles, consistent behavior might be needed
+            // $user->role = 'User'; 
+        }
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User roles updated successfully!',
+            'new_roles' => $roles
+        ]);
     }
 
     public function create()
