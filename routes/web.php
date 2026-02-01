@@ -46,6 +46,9 @@ Route::middleware('web')->group(function () {
             Route::get('/trashed', [UserController::class, 'trashed'])->name('trashed');
             Route::post('/{id}/restore', [UserController::class, 'restore'])->name('restore');
             Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('forceDelete');
+
+            // Permissions Management
+            Route::put('/{user}/permissions', [UserController::class, 'updatePermissions'])->name('permissions.update');
         });
 
         // Settings Routes
@@ -56,7 +59,11 @@ Route::middleware('web')->group(function () {
             Route::post('/theme', [SettingsController::class, 'updateTheme'])->name('theme.update');
             Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
             Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update');
+            Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update');
         });
+
+        // Roles & Permissions Routes
+        Route::resource('roles', \Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class);
 
         // User Logs Route
         Route::get('/user-logs', [UserLogController::class, 'index'])->name('user-logs.index');

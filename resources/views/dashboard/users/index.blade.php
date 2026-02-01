@@ -30,25 +30,25 @@
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-2">
-                <a href="{{ route('users.create') }}"
-                    class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-                    style="background: linear-gradient(135deg, var(--primary));">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Add New User
-                </a>
+                    <a href="{{ route('users.create') }}"
+                        class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                        style="background: linear-gradient(135deg, var(--primary));">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Add New User
+                    </a>
 
-                {{-- tarsh --}}
-                <a href="{{ route('users.trashed') }}"
-                    class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-xl bg-orange-50 text-orange-600 hover:bg-orange-100 font-medium transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    View Trash
-                </a>
+                    {{-- tarsh --}}
+                    <a href="{{ route('users.trashed') }}"
+                        class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-xl bg-orange-50 text-orange-600 hover:bg-orange-100 font-medium transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        View Trash
+                    </a>
                 </div>
             </div>
         </div>
@@ -219,7 +219,8 @@
                                         </div>
                                         <div>
                                             <p class="font-semibold text-gray-900 dark:text-gray-100 text-sm">
-                                                {{ $user->name }}</p>
+                                                {{ $user->name }}
+                                            </p>
                                             <p class="text-xs text-gray-500 dark:text-gray-400 font-medium">ID:
                                                 #{{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}</p>
                                         </div>
@@ -251,73 +252,84 @@
                                         @method('PATCH')
                                         <button type="submit"
                                             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5
-                                            @if ($user->role == 'Admin') text-white hover:opacity-90" style="background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);"
-                                            @else
-                                                text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200" @endif>
+                                                                                                            @if ($user->role == 'Admin') text-white hover:opacity-90"
+                                                                                                            style="background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);" @else
+                                            text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200" @endif>
                                             @if ($user->role == 'Admin')
-<svg class="w-3
-                                            h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                            </svg>
-                                        @else
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                        @endif
-                        {{ $user->role }}
-                        </button>
-                        </form>
-                        </td>
-                        <td class="px-8 py-6">
-                            <form action="{{ route('users.toggleStatus', $user->id) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit"
-                                    class="inline-flex items-center justify-center gap-1.5 w-24 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5
-                                            @if ($user->status == 'Active') bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 border border-green-200"
+                                                <svg class="w-3
+                                                                                                                                            h-3"
+                                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                                </svg>
                                             @else
-                                                bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300 border border-gray-300" @endif>
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                            @endif
+                                            {{ $user->role }}
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <form action="{{ route('users.toggleStatus', $user->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit"
+                                            class="inline-flex items-center justify-center gap-1.5 w-24 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5
+                                                                                                            @if ($user->status == 'Active') bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 border border-green-200"
+                                                                                                            @else bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200
+                                            hover:to-gray-300 border border-gray-300" @endif>
                                             @if ($user->status == 'Active')
-<span class="w-1.5
-                                    h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                                @else
-                                    <span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
-                                    @endif
-                                    {{ $user->status }}
-                                </button>
-                            </form>
-                        </td>
-                        <td class="px-8 py-6">
-                            <div class="flex items-center gap-1.5">
-                                <a href="{{ route('users.edit', $user->id) }}"
-                                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-blue-200">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                    Edit
-                                </a>
+                                                <span
+                                                    class="w-1.5
+                                                                                                                                    h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                            @else
+                                                <span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
+                                            @endif
+                                            {{ $user->status }}
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <div class="flex items-center gap-1.5">
+                                        <a href="{{ route('users.edit', $user->id) }}"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-blue-200">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                            Edit
+                                        </a>
 
-                                <form id="delete-form-{{ $user->id }}"
-                                    action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="button"
-                                        class="delete-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-red-200"
-                                        style="color: var(--secondary);" data-form-id="delete-form-{{ $user->id }}">
-                                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                        </tr>
+                                        <button type="button"
+                                            onclick="openPermissionsModal('{{ $user->id }}', '{{ $user->name }}', {{ json_encode($user->permissions->pluck('id')) }})"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-purple-600 bg-purple-50 hover:bg-purple-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-purple-200">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                            </svg>
+                                            Permissions
+                                        </button>
+
+                                        <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy', $user->id) }}"
+                                            method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button"
+                                                class="delete-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-red-200"
+                                                style="color: var(--secondary);" data-form-id="delete-form-{{ $user->id }}">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
                         @empty
                             <tr>
                                 <td colspan="5" class="text-center py-16">
@@ -337,103 +349,182 @@
                                     </div>
                                 </td>
                             </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Pagination Section -->
-            <div class="p-8 border-t border-gray-100 bg-gray-50">
-                {{ $users->withQueryString()->links() }}
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        @include('admin-panel::dashboard.partials.delete_modal')
-        @include('admin-panel::dashboard.partials.import_modal')
+        <!-- Pagination Section -->
+        <div class="p-8 border-t border-gray-100 bg-gray-50">
+            {{ $users->withQueryString()->links() }}
+        </div>
+    </div>
 
-        @push('scripts')
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Get all the necessary elements from the modal
-                    const deleteModal = document.getElementById('deleteModal');
-                    const cancelModalBtn = document.getElementById('cancelModalBtn');
-                    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    @include('admin-panel::dashboard.partials.delete_modal')
+    @include('admin-panel::dashboard.partials.import_modal')
 
-                    // Get all buttons with the .delete-btn class
-                    const deleteButtons = document.querySelectorAll('.delete-btn');
+    <!-- Permissions Modal -->
+    <div id="permissionsModal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+        aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" aria-hidden="true"
+                onclick="closePermissionsModal()"></div>
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div
+                class="inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-2xl shadow-xl sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full sm:p-6 dark:bg-gray-800">
+                <div class="flex justify-between items-center mb-5">
+                    <h3 class="text-xl font-bold leading-6 text-gray-900 dark:text-gray-100" id="modal-title">Manage
+                        Permissions</h3>
+                    <button type="button" onclick="closePermissionsModal()" class="text-gray-400 hover:text-gray-500">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Managing Direct Permissions for: <span
+                        id="permissionUserName" class="font-bold text-gray-900 dark:text-gray-200"></span></p>
+                <form id="permissionsForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-96 overflow-y-auto p-2">
+                        @foreach($permissions as $permission)
+                            <label
+                                class="flex items-center space-x-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700 transition cursor-pointer">
+                                <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
+                                    class="permission-checkbox form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300">
+                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 select-none">
+                                    {{ $permission->name }}
+                                    <span class="block text-xs text-gray-400 font-normal">{{ $permission->slug }}</span>
+                                </span>
+                            </label>
+                        @endforeach
+                    </div>
+                    <div class="mt-6 sm:mt-8 sm:flex sm:flex-row-reverse gap-3">
+                        <button type="submit"
+                            class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm transition-all">Save
+                            Changes</button>
+                        <button type="button" onclick="closePermissionsModal()"
+                            class="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-                    // This variable will hold the ID of the form to be submitted
-                    let formToSubmit = null;
+    @push('scripts')
+        <script>
+            function openPermissionsModal(userId, userName, userPermissions) {
+                const modal = document.getElementById('permissionsModal');
+                const form = document.getElementById('permissionsForm');
+                const userNameSpan = document.getElementById('permissionUserName');
+                const checkboxes = document.querySelectorAll('.permission-checkbox');
 
-                    // Add a click listener to each delete button on the page
-                    deleteButtons.forEach(button => {
-                        button.addEventListener('click', function() {
-                            // Get the form ID from the button's data-form-id attribute
-                            formToSubmit = this.getAttribute('data-form-id');
-                            // Show the modal
-                            deleteModal.classList.remove('hidden');
-                        });
+                userNameSpan.textContent = userName;
+                // Correctly construct the URL using JS string interpolation with the base route
+                // We use a base URL and append the ID
+                const baseUrl = "{{ route('users.index') }}";
+                // Remove any query params if present in base url (though route() usually doesn't add them unless specified)
+                // A safer way is using a named route pattern or replacing a placeholder
+                // Let's assume standard resource structure: /users/{id}/permissions
+                form.action = `${baseUrl}/${userId}/permissions`;
+
+                checkboxes.forEach(cb => cb.checked = false);
+                if (userPermissions && Array.isArray(userPermissions)) {
+                    userPermissions.forEach(permId => {
+                        const checkbox = document.querySelector(`.permission-checkbox[value="${permId}"]`);
+                        if (checkbox) checkbox.checked = true;
                     });
+                }
+                modal.classList.remove('hidden');
+            }
 
-                    // When the "Yes, Delete" button inside the modal is clicked
-                    confirmDeleteBtn.addEventListener('click', function() {
-                        if (formToSubmit) {
-                            // Find the form with that ID and submit it
-                            document.getElementById(formToSubmit).submit();
-                        }
+            function closePermissionsModal() {
+                document.getElementById('permissionsModal').classList.add('hidden');
+            }
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Get all the necessary elements from the modal
+                const deleteModal = document.getElementById('deleteModal');
+                const cancelModalBtn = document.getElementById('cancelModalBtn');
+                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+                // Get all buttons with the .delete-btn class
+                const deleteButtons = document.querySelectorAll('.delete-btn');
+
+                // This variable will hold the ID of the form to be submitted
+                let formToSubmit = null;
+
+                // Add a click listener to each delete button on the page
+                deleteButtons.forEach(button => {
+                    button.addEventListener('click', function () {
+                        // Get the form ID from the button's data-form-id attribute
+                        formToSubmit = this.getAttribute('data-form-id');
+                        // Show the modal
+                        deleteModal.classList.remove('hidden');
                     });
+                });
 
-                    // When the "Cancel" button is clicked, just hide the modal
-                    cancelModalBtn.addEventListener('click', function() {
+                // When the "Yes, Delete" button inside the modal is clicked
+                confirmDeleteBtn.addEventListener('click', function () {
+                    if (formToSubmit) {
+                        // Find the form with that ID and submit it
+                        document.getElementById(formToSubmit).submit();
+                    }
+                });
+
+                // When the "Cancel" button is clicked, just hide the modal
+                cancelModalBtn.addEventListener('click', function () {
+                    deleteModal.classList.add('hidden');
+                });
+
+                // Also allow closing the modal by clicking on the background
+                deleteModal.addEventListener('click', function (event) {
+                    if (event.target === deleteModal) {
                         deleteModal.classList.add('hidden');
-                    });
+                    }
+                });
 
-                    // Also allow closing the modal by clicking on the background
-                    deleteModal.addEventListener('click', function(event) {
-                        if (event.target === deleteModal) {
-                            deleteModal.classList.add('hidden');
+
+                // --- Import Modal Logic ---
+                const importModal = document.getElementById('importModal');
+                const openImportModalBtn = document.getElementById('openImportModalBtn');
+                const cancelImportBtn = document.getElementById('cancelImportBtn');
+
+                if (openImportModalBtn) {
+                    openImportModalBtn.addEventListener('click', () => {
+                        importModal.classList.remove('hidden');
+                    });
+                }
+
+                if (cancelImportBtn) {
+                    cancelImportBtn.addEventListener('click', () => {
+                        importModal.classList.add('hidden');
+                    });
+                }
+
+                if (importModal) {
+                    importModal.addEventListener('click', (event) => {
+                        if (event.target === importModal) {
+                            importModal.classList.add('hidden');
                         }
                     });
+                }
+            });
+        </script>
 
-
-                    // --- Import Modal Logic ---
+        @if (session('show_import_modal') && $errors->import->any())
+            <script>
+                // When the page reloads with errors, find the import modal and show it.
+                document.addEventListener('DOMContentLoaded', function () {
                     const importModal = document.getElementById('importModal');
-                    const openImportModalBtn = document.getElementById('openImportModalBtn');
-                    const cancelImportBtn = document.getElementById('cancelImportBtn');
-
-                    if (openImportModalBtn) {
-                        openImportModalBtn.addEventListener('click', () => {
-                            importModal.classList.remove('hidden');
-                        });
-                    }
-
-                    if (cancelImportBtn) {
-                        cancelImportBtn.addEventListener('click', () => {
-                            importModal.classList.add('hidden');
-                        });
-                    }
-
                     if (importModal) {
-                        importModal.addEventListener('click', (event) => {
-                            if (event.target === importModal) {
-                                importModal.classList.add('hidden');
-                            }
-                        });
+                        importModal.classList.remove('hidden');
                     }
                 });
             </script>
-
-            @if (session('show_import_modal') && $errors->import->any())
-                <script>
-                    // When the page reloads with errors, find the import modal and show it.
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const importModal = document.getElementById('importModal');
-                        if (importModal) {
-                            importModal.classList.remove('hidden');
-                        }
-                    });
-                </script>
-            @endif
-        @endpush
-    @endsection
+        @endif
+    @endpush
+@endsection

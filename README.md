@@ -66,7 +66,17 @@ You can install the package via Composer.
     php artisan migrate
     ```
 
-4.  **Link Storage:**
+4.  **Setup RBAC (Roles & Permissions):**
+    Sync application routes to permissions and create default roles.
+    ```bash
+    # Sync routes to permissions
+    php artisan dynamic-roles:sync-routes
+
+    # Seed default roles (Admin, Editor, User) and assign permissions
+    php artisan db:seed --class=Sndpbag\AdminPanel\Database\Seeders\RolesAndPermissionsSeeder
+    ```
+
+5.  **Link Storage:**
     Link the storage folder to public for profile images and uploads.
     ```bash
     php artisan storage:link

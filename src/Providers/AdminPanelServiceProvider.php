@@ -44,6 +44,45 @@ class AdminPanelServiceProvider extends ServiceProvider
 
         // Eta config/auth.php file ke dynamically override korbe.
         Config::set('auth.providers.users.model', \Sndpbag\AdminPanel\Models\User::class);
+
+        // Register Console Commands
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Sndpbag\AdminPanel\Console\Commands\SyncRoutesPermissions::class,
+                \Sndpbag\AdminPanel\Console\Commands\MakeSuperAdmin::class,
+                \Sndpbag\AdminPanel\Console\Commands\AssignRoleOrPermission::class,
+            ]);
+        }
+
+        // Register Middleware
+        $router = $this->app['router'];
+        $router->aliasMiddleware('role', \Sndpbag\AdminPanel\Http\Middleware\RoleMiddleware::class);
+        $router->aliasMiddleware('permission', \Sndpbag\AdminPanel\Http\Middleware\PermissionMiddleware::class);
+
+        // --- RBAC Gate Registration ---
+
+        // 1. Super Admin Bypass (Gate::before)
+        // This ensures the Super Admin can do ANYTHING, allowing the sidebar permissions to pass.
+        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+            if (method_exists($user, 'isSuperAdmin') && $user->isSuperAdmin()) {
+                return true;
+            }
+        });
+
+        // 2. Dynamic Permission Gates
+        // This registers a Gate for every permission in the database.
+        // Wrapped in try-catch to prevent errors during initial migration.
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('permissions')) {
+                \Sndpbag\AdminPanel\Models\Permission::get()->map(function ($permission) {
+                    \Illuminate\Support\Facades\Gate::define($permission->slug, function ($user) use ($permission) {
+                        return $user->hasPermission($permission->slug);
+                    });
+                });
+            }
+        } catch (\Exception $e) {
+            // Database likely not ready or permissions table missing
+        }
     }
 
     /**

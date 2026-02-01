@@ -12,8 +12,7 @@
         <p class="text-sm opacity-90 mt-1">Welcome to your dashboard</p>
     </div>
 
-    <nav
-        class="p-4 flex-1 overflow-y-auto 
+    <nav class="p-4 flex-1 overflow-y-auto 
             [&::-webkit-scrollbar]:w-2 
             [&::-webkit-scrollbar-track]:bg-gray-100
             [&::-webkit-scrollbar-thumb]:bg-green-800
@@ -23,14 +22,16 @@
 
 
 
-                @foreach (config('admin-panel.sidebar', []) as $item)
-        <a href="{{ route($item['route']) }}"
-           class="nav-item {{ request()->routeIs($item['active_on']) ? 'active' : '' }} flex items-center gap-4 p-4 rounded-xl mb-2 transition-all"
-           tabindex="0">
-            {!! $item['icon'] !!}  {{-- SVG আইকন দেখানোর জন্য !! !! ব্যবহার করা হলো --}}
-            <span class="font-medium">{{ $item['title'] }}</span>
-        </a>
-    @endforeach
+        @foreach (config('admin-panel.sidebar', []) as $item)
+            @if(!isset($item['permission']) || auth()->user()->can($item['permission']))
+                <a href="{{ route($item['route']) }}"
+                    class="nav-item {{ request()->routeIs($item['active_on']) ? 'active' : '' }} flex items-center gap-4 p-4 rounded-xl mb-2 transition-all"
+                    tabindex="0">
+                    {!! $item['icon'] !!} {{-- SVG আইকন দেখানোর জন্য !! !! ব্যবহার করা হলো --}}
+                    <span class="font-medium">{{ $item['title'] }}</span>
+                </a>
+            @endif
+        @endforeach
 
 
 
@@ -85,11 +86,10 @@
         <div
             class="flex items-center gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 transition cursor-pointer">
             @if (auth()->check())
-                <img src="{{ auth()->user()->profile_image
-                    ? asset('storage/' . auth()->user()->profile_image)
-                    : asset('images/default-avatar.jpeg') }}"
-                    alt="Profile"
-                    class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition">
+                    <img src="{{ auth()->user()->profile_image
+                ? asset('storage/' . auth()->user()->profile_image)
+                : asset('images/default-avatar.jpeg') }}" alt="Profile"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition">
             @else
                 <img src="{{ asset('images/default-avatar.jpeg') }}" alt="Default Profile"
                     class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 hover:border-indigo-500 cursor-pointer transition">
