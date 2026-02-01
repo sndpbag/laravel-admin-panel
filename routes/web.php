@@ -78,6 +78,11 @@ Route::middleware('web')->group(function () {
         // User Logs Route
         Route::get('/user-logs', [UserLogController::class, 'index'])->name('user-logs.index');
 
+        // Fallback Route for Custom 404
+        Route::fallback(function () {
+            return view('admin-panel::errors.404');
+        });
+
         // --- Authentication Routes ---
 
 
