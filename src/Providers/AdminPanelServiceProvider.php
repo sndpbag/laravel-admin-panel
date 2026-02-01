@@ -51,6 +51,7 @@ class AdminPanelServiceProvider extends ServiceProvider
                 \Sndpbag\AdminPanel\Console\Commands\SyncRoutesPermissions::class,
                 \Sndpbag\AdminPanel\Console\Commands\MakeSuperAdmin::class,
                 \Sndpbag\AdminPanel\Console\Commands\AssignRoleOrPermission::class,
+                \Sndpbag\AdminPanel\Console\Commands\SocialLoginCommand::class,
             ]);
         }
 

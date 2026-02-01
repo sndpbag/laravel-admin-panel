@@ -97,6 +97,97 @@ You can install the package via Composer.
 
 ---
 
+## 🔑 Roles & Permissions
+
+This package comes with a built-in Role-Based Access Control (RBAC) system.
+
+### Create a Super Admin
+You can generate a Super Admin user with full access to the system using the following command:
+
+```bash
+php artisan admin-panel:make-super-admin
+```
+
+-   The command will ask if you want to create a **New User** or assign the role to an **Existing User**.
+-   The default login credentials for a new super admin (if you don't customized) are typically:
+    -   **Role:** Super Admin
+
+### Assign Roles or Permissions
+To manually assign roles or direct permissions to a user via the command line:
+
+```bash
+php artisan admin-panel:assign-access
+```
+
+1.  Enter the user's **Email Address**.
+2.  Choose **Role** or **Permission**.
+3.  Select the desired Role/Permission from the list.
+
+### Syncing Permissions
+If you add new routes or want to refresh the permission list based on your route names:
+
+```bash
+php artisan dynamic-roles:sync-routes
+```
+
+---
+
+## 🌐 Social Login (Google & Facebook)
+
+Enable users to log in with their Google or Facebook accounts.
+
+### 1. Install Socialite
+First, install the Laravel Socialite package in your main application:
+
+```bash
+composer require laravel/socialite
+```
+
+### 2. Configure Credentials
+Add your social app credentials to your `.env` file and `config/services.php`.
+
+#### Environment (.env)
+```env
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URL=http://your-domain.com/login/google/callback
+
+FACEBOOK_CLIENT_ID=your-facebook-client-id
+FACEBOOK_CLIENT_SECRET=your-facebook-client-secret
+FACEBOOK_REDIRECT_URL=http://your-domain.com/login/facebook/callback
+```
+> **Note:** If testing locally with XAMPP/WAMP, your redirect URL might look like:
+> `http://localhost/your-project-folder/public/login/google/callback`
+
+#### Services Config (`config/services.php`)
+Ensure these keys exist in your application's `config/services.php` file:
+
+```php
+'google' => [
+    'client_id' => env('GOOGLE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+    'redirect' => env('GOOGLE_REDIRECT_URL'),
+],
+
+'facebook' => [
+    'client_id' => env('FACEBOOK_CLIENT_ID'),
+    'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+    'redirect' => env('FACEBOOK_REDIRECT_URL'),
+],
+```
+
+### 3. Enable the Buttons
+Open `config/admin-panel.php` (published to your config folder) and set the providers to `true`:
+
+```php
+'social_login' => [
+    'google' => true,
+    'facebook' => false,
+],
+```
+
+---
+
 ## 📖 Usage
 
 Access the admin panel at:

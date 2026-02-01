@@ -106,6 +106,12 @@ Route::middleware('web')->group(function () {
 
         Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+        // Social Login Routes
+        Route::get('login/{provider}', [\Sndpbag\AdminPanel\Http\Controllers\Auth\SocialLoginController::class, 'redirectToProvider'])
+            ->name('social.login');
+        Route::get('login/{provider}/callback', [\Sndpbag\AdminPanel\Http\Controllers\Auth\SocialLoginController::class, 'handleProviderCallback'])
+            ->name('social.callback');
+
         // Forgot Password Routes
         Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
             ->name('password.request');
