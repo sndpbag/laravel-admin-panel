@@ -30,25 +30,29 @@
                 </div>
 
                 <div class="flex flex-col md:flex-row gap-2">
-                    <a href="{{ route('users.create') }}"
-                        class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
-                        style="background: linear-gradient(135deg, var(--primary));">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        Add New User
-                    </a>
+                    @can('users.create')
+                        <a href="{{ route('users.create') }}"
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200"
+                            style="background: linear-gradient(135deg, var(--primary));">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Add New User
+                        </a>
+                    @endcan
 
                     {{-- tarsh --}}
-                    <a href="{{ route('users.trashed') }}"
-                        class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-xl bg-orange-50 text-orange-600 hover:bg-orange-100 font-medium transition-all">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        View Trash
-                    </a>
+                    @can('users.trashed')
+                        <a href="{{ route('users.trashed') }}"
+                            class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-xl bg-orange-50 text-orange-600 hover:bg-orange-100 font-medium transition-all">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                            View Trash
+                        </a>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -149,14 +153,16 @@
 
                         <div class="h-6 w-px bg-gray-300"></div>
 
-                        <button type="button" id="openImportModalBtn"
-                            class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-medium transition-all duration-200 shadow-sm hover:shadow">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                            </svg>
-                            Import
-                        </button>
+                        @can('users.import')
+                            <button type="button" id="openImportModalBtn"
+                                class="inline-flex items-center gap-2 px-4 py-2 text-sm rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-medium transition-all duration-200 shadow-sm hover:shadow">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
+                                Import
+                            </button>
+                        @endcan
                     </div>
 
                     <!-- Filter Buttons -->
@@ -248,16 +254,25 @@
                                 </td>
                                 <td class="px-8 py-6">
                                     <div class="flex flex-wrap gap-2">
-                                        @foreach ($roles as $role)
-                                            <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                                                <input type="checkbox" value="{{ $role->slug }}"
-                                                    onchange="updateUserRole(this, '{{ $user->id }}')"
-                                                    class="role-checkbox-{{ $user->id }} form-checkbox w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 transition duration-150 ease-in-out"
-                                                    {{ $user->hasRole($role->slug) ? 'checked' : '' }}>
+                                        @can('users.role.update')
+                                            @foreach ($roles as $role)
+                                                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                                                    <input type="checkbox" value="{{ $role->slug }}"
+                                                        onchange="updateUserRole(this, '{{ $user->id }}')"
+                                                        class="role-checkbox-{{ $user->id }} form-checkbox w-4 h-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500 transition duration-150 ease-in-out"
+                                                        {{ $user->hasRole($role->slug) ? 'checked' : '' }}>
+                                                    <span
+                                                        class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ $role->slug }}</span>
+                                                </label>
+                                            @endforeach
+                                        @else
+                                            @foreach ($user->roles as $role)
                                                 <span
-                                                    class="text-xs font-medium text-gray-700 dark:text-gray-300">{{ $role->slug }}</span>
-                                            </label>
-                                        @endforeach
+                                                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                                                    {{ $role->slug }}
+                                                </span>
+                                            @endforeach
+                                        @endcan
                                     </div>
                                 </td>
                                 <td class="px-8 py-6">
@@ -266,13 +281,13 @@
                                         @method('PATCH')
                                         <button type="submit"
                                             class="inline-flex items-center justify-center gap-1.5 w-24 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5
-                                                                                                                                                                                                    @if ($user->status == 'Active') bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 border border-green-200"
-                                                                                                                                                                                                    @else bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200
+                                                                                                                                                                                                                    @if ($user->status == 'Active') bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 border border-green-200"
+                                                                                                                                                                                                                    @else bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200
                                             hover:to-gray-300 border border-gray-300" @endif>
                                             @if ($user->status == 'Active')
                                                 <span
                                                     class="w-1.5
-                                                                                                                                                                                                                                                                h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                                                                                                                                                                                                                                                                        h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                                             @else
                                                 <span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
                                             @endif
@@ -282,38 +297,44 @@
                                 </td>
                                 <td class="px-8 py-6">
                                     <div class="flex items-center gap-1.5">
-                                        <a href="{{ route('users.edit', $user->id) }}"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-blue-200">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                            </svg>
-                                            Edit
-                                        </a>
+                                        @can('users.edit')
+                                            <a href="{{ route('users.edit', $user->id) }}"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-blue-200">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                                Edit
+                                            </a>
+                                        @endcan
 
-                                        <button type="button"
-                                            onclick="openPermissionsModal('{{ $user->id }}', '{{ $user->name }}', {{ json_encode($user->permissions->pluck('id')) }})"
-                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-purple-600 bg-purple-50 hover:bg-purple-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-purple-200">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                                            </svg>
-                                            Permissions
-                                        </button>
+                                        @can('users.permissions.update')
+                                            <button type="button"
+                                                onclick="openPermissionsModal('{{ $user->id }}', '{{ $user->name }}', {{ json_encode($user->permissions->pluck('id')) }})"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-purple-600 bg-purple-50 hover:bg-purple-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-purple-200">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                                </svg>
+                                                Perms
+                                            </button>
+                                        @endcan
 
                                         <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy', $user->id) }}"
                                             method="POST" class="inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="button"
-                                                class="delete-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-red-200"
-                                                style="color: var(--secondary);" data-form-id="delete-form-{{ $user->id }}">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-                                                Delete
-                                            </button>
+                                            @can('users.destroy')
+                                                <button type="button"
+                                                    class="delete-btn inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 transition-all duration-200 font-semibold text-xs shadow-sm hover:shadow transform hover:-translate-y-0.5 border border-red-200"
+                                                    data-form-id="delete-form-{{ $user->id }}">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                    </svg>
+                                                    Delete
+                                                </button>
+                                            @endcan
                                         </form>
                                     </div>
                                 </td>

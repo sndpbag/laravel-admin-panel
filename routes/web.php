@@ -32,37 +32,36 @@ Route::middleware('web')->group(function () {
 
         // Users Routes
         Route::prefix('users')->name('users.')->group(function () {
-            Route::get('/', [UserController::class, 'index'])->name('index');
-            Route::get('/create', [UserController::class, 'create'])->name('create');
-            Route::post('/', [UserController::class, 'store'])->name('store');
-            Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
-            Route::put('/{user}', [UserController::class, 'update'])->name('update');
-            Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
-            Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggleStatus');
-            Route::patch('/{user}/toggle-role', [UserController::class, 'toggleRole'])->name('toggleRole');
-            Route::get('/export/{type}', [UserController::class, 'export'])->name('export');
-            Route::post('/import', [UserController::class, 'import'])->name('import');
-            Route::get('/import-template', [UserController::class, 'downloadTemplate'])->name('template');
-            Route::get('/trashed', [UserController::class, 'trashed'])->name('trashed');
-            Route::post('/{id}/restore', [UserController::class, 'restore'])->name('restore');
-            Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('forceDelete');
+            Route::get('/', [UserController::class, 'index'])->name('index')->middleware('can:users.index');
+            Route::get('/create', [UserController::class, 'create'])->name('create')->middleware('can:users.create');
+            Route::post('/', [UserController::class, 'store'])->name('store')->middleware('can:users.store');
+            Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit')->middleware('can:users.edit');
+            Route::put('/{user}', [UserController::class, 'update'])->name('update')->middleware('can:users.update');
+            Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy')->middleware('can:users.destroy');
+            Route::patch('/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggleStatus')->middleware('can:users.toggleStatus');
+            Route::patch('/{user}/toggle-role', [UserController::class, 'toggleRole'])->name('toggleRole')->middleware('can:users.toggleRole');
+            Route::get('/export/{type}', [UserController::class, 'export'])->name('export')->middleware('can:users.export');
+            Route::post('/import', [UserController::class, 'import'])->name('import')->middleware('can:users.import');
+            Route::get('/import-template', [UserController::class, 'downloadTemplate'])->name('template')->middleware('can:users.template');
+            Route::get('/trashed', [UserController::class, 'trashed'])->name('trashed')->middleware('can:users.trashed');
+            Route::post('/{id}/restore', [UserController::class, 'restore'])->name('restore')->middleware('can:users.restore');
+            Route::delete('/{id}/force-delete', [UserController::class, 'forceDelete'])->name('forceDelete')->middleware('can:users.forceDelete');
 
             // Permissions Management
-            Route::put('/{user}/permissions', [UserController::class, 'updatePermissions'])->name('permissions.update');
+            Route::put('/{user}/permissions', [UserController::class, 'updatePermissions'])->name('permissions.update')->middleware('can:users.permissions.update');
 
             // Role Management (AJAX)
-            Route::patch('/{user}/role', [UserController::class, 'updateRole'])->name('role.update');
+            Route::patch('/{user}/role', [UserController::class, 'updateRole'])->name('role.update')->middleware('can:users.role.update');
         });
 
         // Settings Routes
         Route::prefix('settings')->name('settings.')->group(function () {
-            Route::get('/', [SettingsController::class, 'index'])->name('index');
-            Route::post('/profile', [SettingsController::class, 'updateProfile'])->name('profile.update');
-            Route::post('/password', [SettingsController::class, 'updatePassword'])->name('password.update');
-            Route::post('/theme', [SettingsController::class, 'updateTheme'])->name('theme.update');
-            Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
-            Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update');
-            Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update');
+            Route::get('/', [SettingsController::class, 'index'])->name('index')->middleware('can:settings.index');
+            Route::post('/profile', [SettingsController::class, 'updateProfile'])->name('profile.update')->middleware('can:settings.profile.update');
+            Route::post('/password', [SettingsController::class, 'updatePassword'])->name('password.update')->middleware('can:settings.password.update');
+            Route::post('/theme', [SettingsController::class, 'updateTheme'])->name('theme.update')->middleware('can:settings.theme.update');
+            Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update')->middleware('can:settings.notifications.update');
+            Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update')->middleware('can:settings.profile-image.update');
         });
 
         // Roles & Permissions Routes
