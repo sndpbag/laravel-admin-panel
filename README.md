@@ -242,6 +242,407 @@ To create your own pages using the dashboard layout:
 
 ---
 
+## 🔒 Security Features
+
+### Roles Page Security Password
+
+The roles management pages (`/roles`) have an additional security layer. Users with permission to access roles must also enter a security password defined in your `.env` file.
+
+#### Setup
+
+1. Add the security password to your `.env` file:
+```env
+ROLES_SECURITY_PASSWORD=YourSecurePasswordHere
+```
+
+2. Navigate to `/roles` - you'll be prompted for the security password
+3. Once verified, the session persists until logout
+
+**Benefits:**
+- Extra protection for sensitive role management
+- Environment-based password (different for dev/staging/production)
+- Session-based verification (no repeated password entry)
+
+---
+
+## 👥 User Activity Logs
+
+Track and monitor user login activities with detailed information.
+
+### Features
+- IP Address tracking
+- Geographic location (City, Country)
+- Device information (OS, Browser)
+- Login timestamp
+- User-agent details
+
+### Accessing Logs
+Navigate to `/user-logs` to view all login activities. Filter by user, date range, or search by location/IP.
+
+### API Integration
+User logs are automatically created on successful login. No additional setup required.
+
+---
+
+## 🎛️ Permission Management
+
+### Understanding the Permission System
+
+This package uses a dynamic permission system where permissions are automatically generated from route names.
+
+#### Permission Structure
+```
+{resource}.{action}
+```
+
+**Examples:**
+- `users.index` → View users list
+- `users.create` → Create new user form
+- `users.store` → Save new user
+- `users.edit` → Edit user form
+- `users.update` → Update user
+- `users.destroy` → Delete user
+
+### Creating Permissions for New Routes
+
+#### Method 1: Automatic (Recommended)
+
+1. Create a **named route** in your `routes/web.php`:
+```php
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+```
+
+2. Run the sync command:
+```bash
+php artisan dynamic-roles:sync-routes
+```
+
+3. Apply permission middleware to the route:
+```php
+Route::get('/posts', [PostController::class, 'index'])
+    ->name('posts.index')
+    ->middleware('can:posts.index');
+```
+
+4. Assign permission to roles via the admin panel at `/roles`
+
+#### Method 2: Manual
+
+Create permissions directly in the database:
+
+```bash
+php artisan tinker
+```
+
+```php
+use Sndpbag\AdminPanel\Models\Permission;
+
+Permission::create([
+    'name' => 'Posts Index',
+    'slug' => 'posts.index',
+    'group_name' => 'posts',
+]);
+```
+
+### Permission Groups
+
+Permissions are automatically grouped by the first part of the route name:
+- `users.*` → Users group
+- `roles.*` → Roles group
+- `settings.*` → Settings group
+- `posts.*` → Posts group
+
+This grouping appears in the roles edit page for better organization.
+
+### Checking Permissions in Code
+
+```php
+// Check if user has permission
+if ($user->hasPermission('posts.create')) {
+    // User can create posts
+}
+
+// In Blade views
+@can('posts.create')
+    <a href="{{ route('posts.create') }}">Create Post</a>
+@endcan
+
+// In routes
+Route::get('/posts', [PostController::class, 'index'])
+    ->middleware('can:posts.index');
+```
+
+---
+
+## 🎨 Theme Customization
+
+### Color Themes
+
+Users can customize the dashboard appearance from `/settings`:
+
+**Available Options:**
+- **Primary Color** - Main brand color
+- **Secondary Color** - Supporting color
+- **Accent Color** - Highlight color
+- **Font Family** - Choose from Poppins, Inter, Roboto, etc.
+
+### Dark Mode
+
+Three modes available:
+- **Light Mode** - Traditional light theme
+- **Dark Mode** - Dark theme for reduced eye strain
+- **System** - Automatically matches OS preference
+
+Settings are saved per user and persist across sessions.
+
+---
+
+## 📊 Data Export
+
+Export user data in multiple formats:
+
+### Available Formats
+- **PDF** - Formatted document
+- **CSV** - Compatible with Excel, Google Sheets
+- **Excel** - Native `.xlsx` format
+
+### How to Export
+
+1. Navigate to `/users`
+2. Click the "Export" dropdown
+3. Select your preferred format
+4. File downloads automatically
+
+**Export includes:**
+- User details (Name, Email, Role, Status)
+- Registration date
+- Last login information
+- Custom filters applied to the list
+
+---
+
+## 🔧 Artisan Commands Reference
+
+### User & Role Management
+
+#### Create Super Admin
+```bash
+php artisan admin-panel:make-super-admin
+```
+Creates a new super admin user or assigns super admin role to existing user.
+
+**Options:**
+- Interactive mode (default) - Prompts for user details
+- Select existing user or create new
+
+#### Assign Access
+```bash
+php artisan admin-panel:assign-access
+```
+Assign roles or permissions to users via CLI.
+
+**Steps:**
+1. Enter user email
+2. Choose Role or Permission
+3. Select from available options
+
+### Permission Management
+
+#### Sync Routes to Permissions
+```bash
+php artisan dynamic-roles:sync-routes
+```
+Automatically creates permissions for all named routes in your application.
+
+**When to use:**
+- After adding new routes
+- After deployment
+- When permissions are out of sync
+
+#### Seed Default Roles
+```bash
+php artisan db:seed --class=Sndpbag\\AdminPanel\\Database\\Seeders\\RolesAndPermissionsSeeder
+```
+Creates default roles (Admin, Editor, User) and assigns permissions.
+
+### Asset Management
+
+#### Publish Views
+```bash
+php artisan vendor:publish --tag=admin-panel-views
+```
+Publishes Blade templates to `resources/views/vendor/admin-panel` for customization.
+
+#### Publish Config
+```bash
+php artisan vendor:publish --provider="Sndpbag\\AdminPanel\\Providers\\AdminPanelServiceProvider"
+```
+Publishes configuration, assets, and migrations.
+
+#### Clear Cache
+```bash
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
+```
+Clear all cached configurations and compiled views.
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues & Solutions
+
+#### 1. 403 Forbidden Error
+**Problem:** User gets "Unauthorized" error on a page.
+
+**Solution:**
+- Check if user has required permission
+- Run `php artisan dynamic-roles:sync-routes`
+- Verify permission is assigned to user's role at `/roles`
+
+#### 2. Security Password Not Working
+**Problem:** Correct password rejected at `/roles/security-check`.
+
+**Solution:**
+- Check `.env` file has `ROLES_SECURITY_PASSWORD=YourPassword`
+- Ensure no extra spaces in the password
+- Run `php artisan config:clear`
+- Clear browser cache and cookies
+
+#### 3. Captcha Not Showing
+**Problem:** Login captcha doesn't display.
+
+**Solution:**
+- Verify GD extension is installed: `php -m | grep -i gd`
+- Check file permissions on `storage/framework/sessions`
+- Clear cache: `php artisan cache:clear`
+
+#### 4. Email Verification Not Sending
+**Problem:** Users don't receive verification emails.
+
+**Solution:**
+- Check `.env` mail configuration
+- Test mail settings: `php artisan tinker` then `Mail::raw('Test', function($msg) { $msg->to('test@example.com')->subject('Test'); });`
+- Check spam folder
+- Verify `MAIL_FROM_ADDRESS` is set
+
+#### 5. Dark Mode Not Persisting
+**Problem:** Dark mode resets on page refresh.
+
+**Solution:**
+- Check database connection
+- Verify `user_settings` table exists
+- Run migrations: `php artisan migrate`
+- Clear browser localStorage and retry
+
+#### 6. PWA Not Installing
+**Problem:** "Install App" option not appearing.
+
+**Solution:**
+- Ensure app is served over HTTPS (required for PWA)
+- Check `manifest.json` is accessible at `/manifest.json`
+- Verify icon files exist in `public/images/icons/`
+- Use supported browser (Chrome, Edge, Safari)
+
+#### 7. Social Login Errors
+**Problem:** Google/Facebook login fails.
+
+**Solution:**
+- Verify credentials in `.env` match provider console
+- Check redirect URLs are exact (including http/https)
+- Ensure Laravel Socialite is installed
+- Confirm provider is enabled in `config/admin-panel.php`
+
+#### 8. Permission Sync Issues
+**Problem:** New routes not appearing in permissions.
+
+**Solution:**
+- Ensure routes have names: `->name('posts.index')`
+- Run sync command: `php artisan dynamic-roles:sync-routes`
+- Check routes: `php artisan route:list`
+- Verify route names don't start with excluded prefixes (ignition, debugbar)
+
+---
+
+## 💡 Best Practices
+
+### Security
+1. **Strong Passwords:** Use complex passwords for roles security and admin accounts
+2. **HTTPS:** Always use HTTPS in production for PWA and secure authentication
+3. **Environment Variables:** Never commit `.env` to version control
+4. **Regular Updates:** Keep Laravel and this package updated
+
+### Performance
+1. **Cache Config:** Run `php artisan config:cache` in production
+2. **Optimize Routes:** Run `php artisan route:cache`
+3. **Asset Compilation:** Compile assets for production
+4. **Database Indexes:** Add indexes on frequently queried columns
+
+### Permissions
+1. **Consistent Naming:** Use `resource.action` pattern for all routes
+2. **Regular Sync:** Sync permissions after adding routes
+3. **Least Privilege:** Give users minimum required permissions
+4. **Permission Groups:** Keep related permissions in same group
+
+### Development Workflow
+1. **Create Route** with name → 2. **Sync Permissions** → 3. **Apply Middleware** → 4. **Assign to Roles**
+
+---
+
+## 📚 FAQ
+
+### Q: Can I use this package with an existing Laravel project?
+**A:** Yes! The package is designed to integrate seamlessly with existing projects. Just install and publish the assets.
+
+### Q: How do I remove the default routes (login, register)?
+**A:** Publish the service provider and modify the route registration, or use route middleware to override default behavior.
+
+### Q: Can users have multiple roles?
+**A:** Currently, users can have one primary role. You can extend the system to support multiple roles by modifying the relationships.
+
+### Q: How do I add custom permissions not tied to routes?
+**A:** Use the manual method described in the Permission Management section or create them via tinker.
+
+### Q: Is this package compatible with Laravel 11?
+**A:** Check the packagist page for the latest compatibility. Update the package with `composer update sndpbag/admin-panel`.
+
+### Q: Can I customize the email templates?
+**A:** Yes, publish views with `--tag=admin-panel-views` and modify the email templates in the vendor folder.
+
+### Q: How do I change the default landing page?
+**A:** Modify the dashboard route in your `routes/web.php` or publish views and customize the dashboard controller.
+
+### Q: Can I disable certain features (like PWA or 2FA)?
+**A:** Yes, modify `config/admin-panel.php` to enable/disable features as needed.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📝 Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+---
+
+## 🙏 Credits
+
+- [Sndpbag](https://github.com/sndpbag)
+- [All Contributors](../../contributors)
+
+---
+
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
