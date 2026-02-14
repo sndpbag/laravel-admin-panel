@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Sndpbag\AdminPanel\Models\SiteSetting;
 
 class SettingsController extends Controller
 {
@@ -53,11 +54,25 @@ class SettingsController extends Controller
             $userSettingsArray = json_decode($userNotificationsData, true) ?? []; // json_decode ব্যর্থ হলে খালি অ্যারে ব্যবহার হবে
         }
 
+
         // ৫. সবশেষে, ডিফল্ট অ্যারের সাথে ইউজারের সেটিংস (যা এখন একটি নিশ্চিত অ্যারে) মার্জ করা হচ্ছে
         $notifications = array_merge($defaultNotifications, $userSettingsArray);
 
+        // Maintenance Mode Settings
+        $maintenanceEnabled = SiteSetting::get('maintenance_mode', 'false') === 'true';
+        $maintenanceMessage = SiteSetting::get('maintenance_message', 'We are currently performing scheduled maintenance.');
+        $bypassToken = SiteSetting::getBypassToken();
+        $allowedIps = implode(', ', SiteSetting::getAllowedIps());
 
-        return view('admin-panel::dashboard.settings.index', compact('user', 'settings', 'notifications'));
+        return view('admin-panel::dashboard.settings.index', compact(
+            'user',
+            'settings',
+            'notifications',
+            'maintenanceEnabled',
+            'maintenanceMessage',
+            'bypassToken',
+            'allowedIps'
+        ));
     }
 
     public function updateProfile(Request $request)
@@ -264,5 +279,89 @@ class SettingsController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['backup' => 'Backup failed: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Toggle maintenance mode on/off
+     */
+    public function toggleMaintenanceMode(Request $request)
+    {
+        try {
+            $isEnabled = $request->input('enabled') === 'true';
+
+            SiteSetting::set('maintenance_mode', $isEnabled ? 'true' : 'false');
+
+            if ($isEnabled) {
+                // Generate new bypass token when enabling
+                $newToken = \Illuminate\Support\Str::random(32);
+                SiteSetting::set('maintenance_bypass_token', $newToken);
+                SiteSetting::set('maintenance_started_at', now());
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $isEnabled ? 'Maintenance mode enabled' : 'Maintenance mode disabled',
+                'bypass_url' => $isEnabled ? route('maintenance.bypass', ['token' => SiteSetting::getBypassToken()]) : null,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to toggle maintenance mode: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Update maintenance mode settings
+     */
+    public function updateMaintenanceSettings(Request $request)
+    {
+        $validated = $request->validate([
+            'message' => 'nullable|string|max:500',
+            'estimated_time' => 'nullable|date',
+            'allowed_ips' => 'nullable|string',
+        ]);
+
+        try {
+            if (isset($validated['message'])) {
+                SiteSetting::set('maintenance_message', $validated['message']);
+            }
+
+            if (isset($validated['estimated_time'])) {
+                SiteSetting::set('maintenance_estimated_time', $validated['estimated_time']);
+            }
+
+            if (isset($validated['allowed_ips'])) {
+                // Convert comma-separated IPs to JSON array
+                $ips = array_map('trim', explode(',', $validated['allowed_ips']));
+                $ips = array_filter($ips); // Remove empty values
+                SiteSetting::set('maintenance_allowed_ips', json_encode($ips));
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Maintenance settings updated successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update settings: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Bypass maintenance mode with secret token
+     */
+    public function bypassMaintenance($token)
+    {
+        $validToken = SiteSetting::getBypassToken();
+
+        if ($token === $validToken) {
+            session(['maintenance_bypass' => true]);
+            return redirect()->route('dashboard')->with('success', 'Maintenance mode bypassed! You can now access the site.');
+        }
+
+        return redirect('/')->withErrors(['bypass' => 'Invalid bypass token.']);
     }
 }

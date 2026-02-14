@@ -253,6 +253,85 @@
             </div>
         @endcan
 
+        <!-- Maintenance Mode -->
+        @can('settings.maintenance.toggle')
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-white">Maintenance Mode</h3>
+                    <span id="maintenanceStatus"
+                        class="px-3 py-1 rounded-full text-sm font-semibold {{ $maintenanceEnabled ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600' }}">
+                        {{ $maintenanceEnabled ? '🔴 ACTIVE' : '🟢 LIVE' }}
+                    </span>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">Put your website in maintenance mode</p>
+
+                <div class="space-y-5">
+                    <!-- Toggle Switch -->
+                    <div class="p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-gray-100 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-semibold text-gray-800 dark:text-white">Enable Maintenance Mode</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Visitors will see a maintenance page
+                                </p>
+                            </div>
+                            <div class="toggle-switch {{ $maintenanceEnabled ? 'active' : '' }}" id="maintenanceToggle">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customization Form -->
+                    <div class="p-5 bg-white dark:bg-gray-800 rounded-xl border-2 border-blue-100 dark:border-blue-800">
+                        <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Customization</h4>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Maintenance
+                                    Message</label>
+                                <textarea id="maintenanceMessage" rows="3"
+                                    class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:outline-none transition"
+                                    placeholder="Enter custom message for visitors">{{ $maintenanceMessage }}</textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Allowed IPs
+                                    (comma-separated)</label>
+                                <input type="text" id="allowedIps" value="{{ $allowedIps }}"
+                                    class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 focus:outline-none transition"
+                                    placeholder="192.168.1.1, 10.0.0.5">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">These IPs can access the site even
+                                    during maintenance</p>
+                            </div>
+
+                            <button type="button" id="updateMaintenanceSettings"
+                                class="w-full px-5 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition">
+                                Save Settings
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bypass URL -->
+                    @if($maintenanceEnabled)
+                        <div
+                            class="p-5 bg-purple-50 dark:bg-purple-900/20 rounded-xl border-2 border-purple-100 dark:border-purple-800">
+                            <h4 class="text-lg font-semibold text-gray-800 dark:text-white mb-3">🔐 Secret Bypass URL</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Share this link to grant access during
+                                maintenance:</p>
+                            <div class="flex gap-2">
+                                <input type="text" id="bypassUrl" readonly
+                                    value="{{ route('maintenance.bypass', ['token' => $bypassToken]) }}"
+                                    class="flex-1 bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-purple-200 dark:border-purple-700 font-mono text-sm">
+                                <button type="button" id="copyBypassUrl"
+                                    class="px-5 py-3 bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600 text-white font-semibold rounded-xl transition">
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endcan
+
         <!-- Database Management -->
         @can('settings.backup.database')
             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
@@ -335,6 +414,108 @@
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />';
                 icon.classList.remove('animate-spin');
             }, 5000);
+        });
+        // Maintenance Mode Toggle
+        document.getElementById('maintenanceToggle')?.addEventListener('click', async function () {
+            const toggle = this;
+            const isEnabled = !toggle.classList.contains('active');
+
+            if (isEnabled && !confirm('⚠️ Are you sure you want to enable maintenance mode?\n\nVisitors will see a maintenance page. Only whitelisted IPs and bypass token holders can access the site.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('{{ route("settings.maintenance.toggle") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ enabled: isEnabled ? 'true' : 'false' })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update toggle state
+                    if (isEnabled) {
+                        toggle.classList.add('active');
+                    } else {
+                        toggle.classList.remove('active');
+                    }
+
+                    // Update status badge
+                    const statusBadge = document.getElementById('maintenanceStatus');
+                    if (isEnabled) {
+                        statusBadge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-600';
+                        statusBadge.textContent = '🔴 ACTIVE';
+                    } else {
+                        statusBadge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-600';
+                        statusBadge.textContent = '🟢 LIVE';
+                    }
+
+                    // Reload page to show/hide bypass URL
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    alert('Failed to toggle maintenance mode: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        // Update Maintenance Settings
+        document.getElementById('updateMaintenanceSettings')?.addEventListener('click', async function () {
+            const button = this;
+            const originalText = button.textContent;
+            button.disabled = true;
+            button.textContent = 'Saving...';
+
+            try {
+                const message = document.getElementById('maintenanceMessage').value;
+                const allowedIps = document.getElementById('allowedIps').value;
+
+                const response = await fetch('{{ route("settings.maintenance.update") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ message, allowed_ips: allowedIps })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    button.textContent = '✓ Saved!';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 2000);
+                } else {
+                    alert('Failed to update settings: ' + data.message);
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        });
+
+        // Copy Bypass URL
+        document.getElementById('copyBypassUrl')?.addEventListener('click', function () {
+            const urlInput = document.getElementById('bypassUrl');
+            urlInput.select();
+            document.execCommand('copy');
+
+            const button = this;
+            const originalText = button.textContent;
+            button.textContent = '✓ Copied!';
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 2000);
         });
     </script>
 @endsection

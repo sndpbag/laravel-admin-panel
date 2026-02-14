@@ -38,7 +38,21 @@ This admin panel is packed with features to help you build your application fast
 -   **Offline Mode:** Works even when the internet is down (displays cached pages/offline fallback).
 -   **Fast Loading:** Service Worker caches static assets for instant load times.
 
-### 🛠️ Developer Friendly
+### � Database Management (New!)
+-   **One-Click Backup:** Download complete database backup as SQL file
+-   **Cross-Platform Compatible:** Pure PHP implementation works on Windows, Linux, Mac
+-   **Permission-Based:** Restricted access for authorized users only
+-   **Complete Export:** Includes table structure, data, and foreign keys
+
+### 🔧 Maintenance Mode (New!)
+-   **Toggle Switch:** Enable/disable maintenance mode with one click
+-   **Beautiful Maintenance Page:** Animated page with custom messages
+-   **Secret Bypass URL:** Unique token-based access for administrators
+-   **IP Whitelist:** Allow specific IPs to bypass maintenance
+-   **Customizable:** Edit message and settings in real-time
+-   **Permission-Protected:** Super admin exclusive feature
+
+### �🛠️ Developer Friendly
 -   **Config-Driven Sidebar:** Add menu items via `config/admin-panel.php` without touching core code.
 -   **View Customization:** Publish and modify blade views to match your design.
 -   **Data Export:** Export user lists to PDF, CSV, or Excel.
@@ -421,7 +435,127 @@ Export user data in multiple formats:
 
 ---
 
-## 🔧 Artisan Commands Reference
+## � Database Backup
+
+Export your complete database with a single click.
+
+### Features
+- **Complete Export:** All tables, structures, and data
+- **SQL Format:** Standard MySQL dump format
+- **Direct Download:** Instant download, no server storage
+- **Permission-Based:** Requires `settings.backup.database` permission
+
+### How to Backup
+
+1. Navigate to `/settings`
+2. Scroll to **Database Management** section
+3. Click "Download Database Backup"
+4. Wait for backup generation
+5. SQL file downloads automatically
+
+**Backup naming:** `backup_[database_name]_[timestamp].sql`
+
+### Requirements
+- PHP with database connection access
+- Sufficient memory for large databases
+- Write permissions for temporary storage
+
+---
+
+## 🔧 Maintenance Mode
+
+Put your website into maintenance mode during updates or fixes.
+
+### Key Features
+- **One-Click Toggle:** Enable/disable instantly
+- **Beautiful Page:** Animated maintenance page with custom message
+- **Secret Bypass URL:** Share token link for admin access
+- **IP Whitelist:** Specific IPs always have access
+- **Real-Time Status:** Live indicator (🔴 ACTIVE / 🟢 LIVE)
+- **Permission-Protected:** Only super admins can toggle
+
+### Setup
+
+1. **Sync Permissions:**
+   ```bash
+   php artisan dynamic-roles:sync-routes
+   ```
+
+2. **Assign Permission:**
+   - Go to `/roles`
+   - Edit Super Admin role
+   - Check "Settings Maintenance Toggle"
+   - Save
+
+### Usage Guide
+
+#### Enable Maintenance Mode
+1. Go to `/settings`
+2. Find **Maintenance Mode** section
+3. Click toggle switch
+4. Confirm in popup dialog
+5. Status changes to **🔴 ACTIVE**
+6. **Secret Bypass URL** appears
+
+#### Customize Message
+1. Enter custom message in "Customization" section
+2. Click "Save Settings"
+3. Message appears on public maintenance page
+
+#### Add IP Whitelist
+1. Enter comma-separated IPs (e.g., `192.168.1.1, 10.0.0.5`)
+2. Click "Save Settings"
+3. These IPs bypass maintenance automatically
+
+#### Share Bypass Access
+1. Copy the secret bypass URL
+2. Share with admins/developers
+3. Anyone with link can access site
+4. New token generated each time maintenance is enabled
+
+#### Disable Maintenance
+1. Click toggle switch again
+2. Status changes to **🟢 LIVE**
+3. Site returns to normal
+
+### Technical Details
+
+**Database Table:** `site_settings`
+
+**Middleware:** `CheckMaintenanceMode`
+
+**Routes:**
+- `POST /settings/maintenance/toggle` - Toggle ON/OFF
+- `POST /settings/maintenance/update` - Update settings
+- `GET /maintenance-bypass/{token}` - Bypass with token
+
+**Excluded Routes:**
+- Admin panel routes (`/dashboard`, `/users`, `/roles`, etc.)
+- Authentication routes (`/login`, `/logout`)
+- Password reset routes
+
+### Troubleshooting
+
+**Q: Maintenance page not showing?**
+- Check if IP is whitelisted
+- Clear browser cache
+- Verify maintenance is enabled in database
+
+**Q: Bypass URL not working?**
+- Ensure token matches database
+- Clear route cache: `php artisan route:clear`
+- Check URL is complete (includes token)
+
+**Q: Can't disable maintenance?**
+- Access via bypass URL first
+- Or update database directly:
+  ```sql
+  UPDATE site_settings SET value='false' WHERE key='maintenance_mode';
+  ```
+
+---
+
+## �🔧 Artisan Commands Reference
 
 ### User & Role Management
 

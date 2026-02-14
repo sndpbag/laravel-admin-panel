@@ -63,6 +63,8 @@ Route::middleware('web')->group(function () {
             Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update')->middleware('can:settings.notifications.update');
             Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update')->middleware('can:settings.profile-image.update');
             Route::post('/backup-database', [SettingsController::class, 'backupDatabase'])->name('backup.database')->middleware('can:settings.backup.database');
+            Route::post('/maintenance/toggle', [SettingsController::class, 'toggleMaintenanceMode'])->name('maintenance.toggle')->middleware('can:settings.maintenance.toggle');
+            Route::post('/maintenance/update', [SettingsController::class, 'updateMaintenanceSettings'])->name('maintenance.update')->middleware('can:settings.maintenance.toggle');
         });
 
         // Roles & Permissions Routes
@@ -154,6 +156,9 @@ Route::middleware('web')->group(function () {
         // Notice page ebong resend email link (login kora user-der jonno)
         Route::get('verify-email', [VerificationController::class, 'notice'])->name('verification.notice');
     });
+
+    // Maintenance Bypass Route (Public - No Auth Required)
+    Route::get('/maintenance-bypass/{token}', [SettingsController::class, 'bypassMaintenance'])->name('maintenance.bypass');
 
     Route::post('email/verification-notification', [VerificationController::class, 'send'])
         ->middleware('throttle:6,1')
