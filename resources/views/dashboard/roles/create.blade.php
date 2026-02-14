@@ -18,7 +18,7 @@
                 <div class="mb-6">
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Role Name</label>
                     <input type="text" name="name" value="{{ old('name') }}" required
-                        class="w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:border-primary focus:ring focus:ring-primary/20 transition-all">
+                        class="w-full bg-white dark:bg-gray-800 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 focus:border-primary focus:ring focus:ring-primary/20 transition-all">
                     @error('name') <p class="text-red-500 text-sm mt-1">{{ $message }}</p> @enderror
                 </div>
 

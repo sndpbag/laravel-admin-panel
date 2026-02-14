@@ -73,10 +73,10 @@
         @endif
 
         <!-- Filters Section -->
-        <div class="p-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+        <div class="p-8 bg-white dark:bg-gray-800">
             <form action="{{ route('users.index') }}" method="GET" class="space-y-6">
                 <!-- Search and Filters Row -->
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 ">
                     <!-- Search Input with icon -->
                     <div class="md:col-span-6 relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -190,8 +190,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
-                        <tr
-                            class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-y border-gray-200 dark:border-gray-700">
+                        <tr class="bg-white dark:bg-gray-800 border-y border-gray-200 dark:border-gray-700">
                             <th
                                 class="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                 User Info</th>
@@ -281,13 +280,13 @@
                                         @method('PATCH')
                                         <button type="submit"
                                             class="inline-flex items-center justify-center gap-1.5 w-24 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-300 shadow-sm hover:shadow transform hover:-translate-y-0.5
-                                                                                                                                                                                                                    @if ($user->status == 'Active') bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 border border-green-200"
-                                                                                                                                                                                                                    @else bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200
+                                                                                                                                                                                                                                            @if ($user->status == 'Active') bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 hover:from-green-100 hover:to-emerald-100 border border-green-200"
+                                                                                                                                                                                                                                            @else bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200
                                             hover:to-gray-300 border border-gray-300" @endif>
                                             @if ($user->status == 'Active')
                                                 <span
                                                     class="w-1.5
-                                                                                                                                                                                                                                                                                        h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                                                                                                                                                                                                                                                                                                                            h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                                             @else
                                                 <span class="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
                                             @endif
@@ -340,10 +339,11 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
+                            <tr class="bg-white dark:bg-gray-800">
                                 <td colspan="5" class="text-center py-16">
                                     <div class="flex flex-col items-center justify-center gap-4">
-                                        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
+                                        <div
+                                            class="w-24 h-24 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center">
                                             <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
                                                 viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

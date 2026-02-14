@@ -41,7 +41,7 @@
                             </label>
                             <input type="file" id="profileImageInput" name="profile_image" class="hidden"
                                 accept="image/png, image/jpeg, image/gif">
-                            <p class="text-sm text-gray-500">Click image to change</p>
+                            <p class="text-sm bg-white dark:bg-gray-800 text-gray-500">Click image to change</p>
                         @else
                             <img id="profileImagePreview"
                                 src="{{ $user->profile_image ? Storage::url($user->profile_image) : '...' }}" alt="Profile"
@@ -53,7 +53,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
                             <input type="text" name="name" value="{{ old('name', $user->name) }}"
-                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
+                                class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
                                 required>
                             @error('name')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -63,7 +63,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                             <input type="email" name="email" value="{{ old('email', $user->email) }}"
-                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
+                                class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
                                 required>
                             @error('email')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -73,7 +73,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
                             <input type="tel" name="phone" value="{{ old('phone', $user->phone) }}"
-                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition">
+                                class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition">
                             @error('phone')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -99,7 +99,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Current Password</label>
                             <input type="password" name="current_password" placeholder="••••••••"
-                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
+                                class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
                                 required>
                             @error('current_password')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -109,7 +109,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">New Password</label>
                             <input type="password" name="new_password" placeholder="••••••••"
-                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
+                                class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
                                 required>
                             @error('new_password')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -119,7 +119,7 @@
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm New Password</label>
                             <input type="password" name="new_password_confirmation" placeholder="••••••••"
-                                class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
+                                class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
                                 required>
                         </div>
 
@@ -143,7 +143,7 @@
                             <input type="color" id="primaryColor" value="{{ $settings['primary_color'] }}"
                                 class="color-preview">
                             <input type="text" id="primaryText" value="{{ $settings['primary_color'] }}"
-                                class="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition font-mono">
+                                class="flex-1 bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition font-mono">
                         </div>
                     </div>
 
@@ -151,25 +151,26 @@
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Secondary Color</label>
                         <div class="flex items-center gap-4">
                             <input type="color" id="secondaryColor" value="{{ $settings['secondary_color'] }}"
-                                class="color-preview">
+                                class="color-preview bg-white dark:bg-gray-800">
                             <input type="text" id="secondaryText" value="{{ $settings['secondary_color'] }}"
-                                class="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition font-mono">
+                                class="flex-1 bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition font-mono">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Accent Color</label>
                         <div class="flex items-center gap-4">
-                            <input type="color" id="accentColor" value="{{ $settings['accent_color'] }}" class="color-preview">
+                            <input type="color" id="accentColor" value="{{ $settings['accent_color'] }}"
+                                class="color-preview bg-white dark:bg-gray-800">
                             <input type="text" id="accentText" value="{{ $settings['accent_color'] }}"
-                                class="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition font-mono">
+                                class="flex-1 bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition font-mono">
                         </div>
                     </div>
 
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-3">Font Family</label>
                         <select id="fontFamily"
-                            class="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition">
+                            class="w-full bg-white dark:bg-gray-800 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition">
                             <option value="'Poppins', sans-serif" {{ $settings['font_family'] == "'Poppins', sans-serif" ? 'selected' : '' }}>Poppins (Default)</option>
                             <option value="'Inter', sans-serif" {{ $settings['font_family'] == "'Inter', sans-serif" ? 'selected' : '' }}>Inter</option>
                             <option value="'Roboto', sans-serif" {{ $settings['font_family'] == "'Roboto', sans-serif" ? 'selected' : '' }}>Roboto</option>
@@ -205,13 +206,13 @@
 
         <!-- Notification Settings -->
         @can('settings.notifications.update')
-            <div class="bg-white rounded-2xl shadow-lg p-6">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
                 <h3 class="text-2xl font-bold text-gray-800 mb-6">Notification Settings</h3>
 
                 <div class="space-y-5">
-                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl">
                         <div>
-                            <p class="font-semibold text-gray-800">Email Notifications</p>
+                            <p class="font-semibold text-gray-800 dark:text-white">Email Notifications</p>
                             <p class="text-sm text-gray-600 mt-1">Receive important updates</p>
                         </div>
                         <div class="toggle-switch {{ $notifications['email'] ? 'active' : '' }}" data-toggle="email">
@@ -219,30 +220,30 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl">
                         <div>
-                            <p class="font-semibold text-gray-800">Push Notifications</p>
-                            <p class="text-sm text-gray-600 mt-1">Notifications in browser</p>
+                            <p class="font-semibold text-gray-800 dark:text-white">Push Notifications</p>
+                            <p class="text-sm text-gray-600 mt-1 dark:text-gray-400">Notifications in browser</p>
                         </div>
                         <div class="toggle-switch {{ $notifications['push'] ? 'active' : '' }}" data-toggle="push">
                             <div class="toggle-slider"></div>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl">
                         <div>
-                            <p class="font-semibold text-gray-800">SMS Notifications</p>
-                            <p class="text-sm text-gray-600 mt-1">Receive messages on phone</p>
+                            <p class="font-semibold text-gray-800 dark:text-white">SMS Notifications</p>
+                            <p class="text-sm text-gray-600 mt-1 dark:text-gray-400">Receive messages on phone</p>
                         </div>
                         <div class="toggle-switch {{ $notifications['sms'] ? 'active' : '' }}" data-toggle="sms">
                             <div class="toggle-slider"></div>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl">
                         <div>
-                            <p class="font-semibold text-gray-800">Weekly Reports</p>
-                            <p class="text-sm text-gray-600 mt-1">Get weekly summaries</p>
+                            <p class="font-semibold text-gray-800 dark:text-white">Weekly Reports</p>
+                            <p class="text-sm text-gray-600 mt-1 dark:text-gray-400">Get weekly summaries</p>
                         </div>
                         <div class="toggle-switch {{ $notifications['weekly'] ? 'active' : '' }}" data-toggle="weekly">
                             <div class="toggle-slider"></div>

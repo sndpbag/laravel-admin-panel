@@ -36,7 +36,7 @@
         </div>
 
         <!-- Stats Overview (Optional) -->
-        <div class="p-8 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 border-b border-gray-100 dark:border-gray-800">
+        <div class="p-8 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 border-2 border-gray-200 dark:border-gray-700 hover:border-green-300 dark:hover:border-green-600 transition-all duration-200">
                     <div class="flex items-center gap-3">
@@ -85,7 +85,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead>
-                        <tr class="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-y border-gray-200 dark:border-gray-700">
+                        <tr class="bg-white dark:bg-gray-800  border-y border-gray-200 dark:border-gray-700">
                             <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">User</th>
                             <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Location & IP</th>
                             <th class="px-4 py-3 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Device Details</th>
@@ -111,7 +111,7 @@
                                             @endif
                                         </div>
                                         <div>
-                                            <p class="font-semibold text-gray-900 dark:text-gray-100 text-sm">{{ $log->user->name ?? $log->email }}</p>
+                                            <p class="font-semibold text-gray-500 dark:text-gray-400 text-sm">{{ $log->user->name ?? $log->email }}</p>
                                             @if($log->user)
                                                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ $log->user->email }}</p>
                                             @endif
@@ -120,7 +120,7 @@
                                 </td>
                                 <td class="px-4 py-3">
                                     <div class="space-y-1">
-                                        <p class="font-semibold text-gray-900 dark:text-gray-100 text-sm flex items-center gap-2">
+                                        <p class="font-semibold text-gray-900 dark:text-green-500 text-sm flex items-center gap-2">
                                             <svg class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
