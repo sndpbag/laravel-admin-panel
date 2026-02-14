@@ -11,6 +11,48 @@ use Illuminate\Support\Str;
 class RoleController extends Controller
 {
     /**
+     * Show security password check page
+     */
+    public function showSecurityCheck()
+    {
+        return view('admin-panel::dashboard.roles.security-check');
+    }
+
+    /**
+     * Verify security password from .env
+     */
+    public function verifySecurityPassword(Request $request)
+    {
+        $request->validate([
+            'security_password' => 'required|string',
+        ]);
+
+        $envPassword = env('ROLES_SECURITY_PASSWORD');
+
+        if ($request->security_password === $envPassword) {
+            session(['roles_security_verified' => true]);
+
+            // Redirect to intended URL or roles index
+            $intendedUrl = session('intended_url', route('roles.index'));
+            session()->forget('intended_url');
+
+            return redirect($intendedUrl)->with('success', 'Access granted!');
+        }
+
+        return back()->withErrors([
+            'security_password' => 'Invalid security key. Please try again.'
+        ])->withInput();
+    }
+
+    /**
+     * Clear security verification session
+     */
+    public function clearSecuritySession()
+    {
+        session()->forget('roles_security_verified');
+        return redirect()->route('dashboard')->with('success', 'Security session cleared.');
+    }
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)

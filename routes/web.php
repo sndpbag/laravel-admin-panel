@@ -66,7 +66,15 @@ Route::middleware('web')->group(function () {
 
         // Roles & Permissions Routes
         // Roles & Permissions Routes
+
+        // Security check routes (accessible without security password middleware)
         Route::prefix('roles')->name('roles.')->group(function () {
+            Route::get('/security-check', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'showSecurityCheck'])->name('security.check');
+            Route::post('/security-verify', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'verifySecurityPassword'])->name('security.verify');
+        });
+
+        // Protected roles routes (require security password verification)
+        Route::prefix('roles')->name('roles.')->middleware(\Sndpbag\AdminPanel\Http\Middleware\CheckRolesSecurityPassword::class)->group(function () {
             Route::get('/', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'index'])->name('index')->middleware('can:roles.index');
             Route::get('/create', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'create'])->name('create')->middleware('can:roles.create');
             Route::post('/', [\Sndpbag\AdminPanel\Http\Controllers\Dashboard\RoleController::class, 'store'])->name('store')->middleware('can:roles.store');
