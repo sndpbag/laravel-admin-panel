@@ -184,4 +184,85 @@ class SettingsController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Backup database and download SQL file
+     */
+    public function backupDatabase()
+    {
+        try {
+            $dbName = config('database.connections.mysql.database');
+
+            // Generate filename with timestamp
+            $filename = 'backup_' . $dbName . '_' . date('Y-m-d_H-i-s') . '.sql';
+            $backupPath = storage_path('app/' . $filename);
+
+            // Get all tables
+            $tables = \DB::select('SHOW TABLES');
+            $tablesKey = 'Tables_in_' . $dbName;
+
+            // Start SQL dump content
+            $sql = "-- Database Backup\n";
+            $sql .= "-- Database: {$dbName}\n";
+            $sql .= "-- Generated: " . date('Y-m-d H:i:s') . "\n\n";
+            $sql .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
+
+            foreach ($tables as $table) {
+                $tableName = $table->$tablesKey;
+
+                // Drop table statement
+                $sql .= "-- --------------------------------------------------------\n";
+                $sql .= "-- Table structure for table `{$tableName}`\n";
+                $sql .= "-- --------------------------------------------------------\n\n";
+                $sql .= "DROP TABLE IF EXISTS `{$tableName}`;\n";
+
+                // Create table statement
+                $createTable = \DB::select("SHOW CREATE TABLE `{$tableName}`");
+                $sql .= $createTable[0]->{'Create Table'} . ";\n\n";
+
+                // Table data
+                $rows = \DB::table($tableName)->get();
+
+                if ($rows->count() > 0) {
+                    $sql .= "-- Dumping data for table `{$tableName}`\n\n";
+
+                    foreach ($rows as $row) {
+                        $row = (array) $row;
+                        $columns = array_keys($row);
+                        $values = array_values($row);
+
+                        // Escape values
+                        $escapedValues = array_map(function ($value) {
+                            if (is_null($value)) {
+                                return 'NULL';
+                            }
+                            return "'" . addslashes($value) . "'";
+                        }, $values);
+
+                        $sql .= "INSERT INTO `{$tableName}` (`" . implode('`, `', $columns) . "`) VALUES (" . implode(', ', $escapedValues) . ");\n";
+                    }
+
+                    $sql .= "\n";
+                }
+            }
+
+            $sql .= "SET FOREIGN_KEY_CHECKS=1;\n";
+
+            // Write to file
+            file_put_contents($backupPath, $sql);
+
+            // Check if backup was successful
+            if (!file_exists($backupPath)) {
+                throw new \Exception('Database backup failed. Could not create backup file.');
+            }
+
+            // Download the file
+            return response()->download($backupPath, $filename, [
+                'Content-Type' => 'application/sql',
+            ])->deleteFileAfterSend(true);
+
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['backup' => 'Backup failed: ' . $e->getMessage()]);
+        }
+    }
 }

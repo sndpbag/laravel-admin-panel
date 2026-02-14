@@ -62,6 +62,7 @@ Route::middleware('web')->group(function () {
             Route::post('/theme', [SettingsController::class, 'updateTheme'])->name('theme.update')->middleware('can:settings.theme.update');
             Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update')->middleware('can:settings.notifications.update');
             Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update')->middleware('can:settings.profile-image.update');
+            Route::post('/backup-database', [SettingsController::class, 'backupDatabase'])->name('backup.database')->middleware('can:settings.backup.database');
         });
 
         // Roles & Permissions Routes
