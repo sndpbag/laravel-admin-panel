@@ -17,6 +17,7 @@ class AdminPanelServiceProvider extends ServiceProvider
 
         // ১. প্যাকেজের রাউট (Routes) লোড করার জন্য
         $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/../../routes/api.php');
 
         // ২. প্যাকেজের মাইগ্রেশন (Migrations) লোড করার জন্য
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');

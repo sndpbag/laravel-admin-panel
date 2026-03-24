@@ -98,4 +98,15 @@ class DashboardController extends Controller
     {
         //
     }
+    public function apiStats()
+    {
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'total_users' => \Sndpbag\AdminPanel\Models\User::count(),
+                'active_users' => \Sndpbag\AdminPanel\Models\User::where('status', 'active')->count(),
+                'server_time' => now()->toDateTimeString(),
+            ]
+        ]);
+    }
 }

@@ -807,6 +807,68 @@ To use a component from the package, use the `admin-panel::` prefix:
 
 ---
 
+## API Usage (Mobile App Support)
+
+The package now supports mobile applications via **Laravel Sanctum**.
+
+### Authentication Endpoints
+
+#### Register
+**Endpoint:** `POST /api/v1/register`
+**Payload:** `name`, `email`, `password`, `password_confirmation`.
+
+#### Login (OTP Triggered)
+**Endpoint:** `POST /api/v1/login`
+**Payload:** `email`, `password`, `device_name`.
+**Response:** `status: "otp_required"`.
+
+#### Verify OTP
+**Endpoint:** `POST /api/v1/verify-otp`
+**Payload:** `email`, `otp`, `device_name`.
+**Response:** Returns `token`.
+
+#### Resend OTP
+**Endpoint:** `POST /api/v1/resend-otp`
+**Payload:** `email`.
+
+#### Forgot Password
+**Endpoint:** `POST /api/v1/forgot-password`
+**Payload:** `email`.
+
+#### Reset Password
+**Endpoint:** `POST /api/v1/reset-password`
+**Payload:** `token`, `email`, `password`, `password_confirmation`.
+
+### Protected Endpoints
+Require `Authorization: Bearer {token}` header.
+
+- **Get Me:** `GET /api/v1/me`
+- **Logout:** `POST /api/v1/logout`
+- **Resend Verification:** `POST /api/v1/resend-verification`
+- **Stats:** `GET /api/v1/stats`
+
+### Dashboard Management (Admin Only)
+Requires `permission:admin`.
+
+#### User Management
+- `GET /api/v1/users` - List users (paginated)
+- `POST /api/v1/users` - Create user
+- `GET /api/v1/users/{id}` - View user
+- `PUT /api/v1/users/{id}` - Update user
+- `DELETE /api/v1/users/{id}` - Soft delete user
+
+#### Role Management
+- `GET /api/v1/roles` - List roles
+- `POST /api/v1/roles` - Create role
+- `GET /api/v1/roles/{id}` - View role
+- `PUT /api/v1/roles/{id}` - Update role
+- `DELETE /api/v1/roles/{id}` - Delete role
+
+#### Permissions
+- `GET /api/v1/permissions` - List all permissions grouped by group_name.
+
+---
+
 ## 🛠️ Development & Assets
 
 This package now uses a local **Tailwind CSS** installation instead of a CDN for better performance and production readiness.

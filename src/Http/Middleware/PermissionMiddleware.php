@@ -19,6 +19,9 @@ class PermissionMiddleware
     public function handle(Request $request, Closure $next, $permission)
     {
         if (!Auth::check()) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
             return redirect('login');
         }
 
@@ -27,6 +30,12 @@ class PermissionMiddleware
         // Check Permission (Handling Super Admin & Hierarchy inside trait)
         if ($user->hasPermission($permission)) {
             return $next($request);
+        }
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'message' => 'Unauthorized. You do not have permission: ' . $permission
+            ], 403);
         }
 
         abort(403, 'Unauthorized. You do not have permission: ' . $permission);
