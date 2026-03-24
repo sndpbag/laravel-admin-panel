@@ -61,6 +61,7 @@ This admin panel is packed with features to help you build your application fast
 -   **Tailwind CSS:** Professional setup using a local installation instead of CDN for better performance.
 -   **Vite Integration:** Modern asset bundling and minification.
 -   **Asset Publishing:** Easy-to-use command to update package styles in your project.
+-   **Livewire v3 Support:** Built-in support for real-time, reactive components without writing complex JavaScript.
 
 ---
 
@@ -783,6 +784,26 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 - [Sndpbag](https://github.com/sndpbag)
 - [All Contributors](../../contributors)
+
+---
+
+## ⚡ Livewire Support
+
+This package comes with **Laravel Livewire v3** out of the box. You can create reactive components easily.
+
+### Using Built-in Components:
+To use a component from the package, use the `admin-panel::` prefix:
+```blade
+<livewire:admin-panel::counter />
+```
+
+### Creating Your Own:
+1. Create your component in `src/Http/Livewire/`.
+2. Register it in the `AdminPanelServiceProvider` boot method:
+   ```php
+   \Livewire\Livewire::component('admin-panel::my-component', MyComponent::class);
+   ```
+3. Use it in your blade files.
 
 ---
 

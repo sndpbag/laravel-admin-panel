@@ -20,6 +20,7 @@
     <title>@yield('title', 'sndp-bag Dashboard')</title>
 
     <link rel="stylesheet" href="{{ asset('vendor/admin-panel/css/admin.css') }}">
+    @livewireStyles
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -452,6 +453,7 @@
             });
         }
     </script>
+    @livewireScripts
 </body>
 
 </html>

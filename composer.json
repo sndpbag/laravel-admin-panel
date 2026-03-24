@@ -18,7 +18,8 @@
         "jenssegers/agent": "^2.6",
         "maatwebsite/excel": "^3.1",
         "stevebauman/location": "^7.6",
-        "laravel/socialite": "*"
+        "laravel/socialite": "*",
+        "livewire/livewire": "^3.0"
     },
     "autoload": {
         "psr-4": {

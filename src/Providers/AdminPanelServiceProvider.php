@@ -84,6 +84,11 @@ class AdminPanelServiceProvider extends ServiceProvider
         } catch (\Exception $e) {
             // Database likely not ready or permissions table missing
         }
+
+        // 3. Register Livewire Components
+        if (class_exists('Livewire\Livewire')) {
+            \Livewire\Livewire::component('admin-panel::counter', \Sndpbag\AdminPanel\Http\Livewire\Counter::class);
+        }
     }
 
     /**

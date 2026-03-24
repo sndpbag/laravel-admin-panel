@@ -84,6 +84,11 @@
         </div>
     </div>
     
+    <!-- Livewire Test Section -->
+    <div class="mt-8 max-w-sm">
+        <livewire:admin-panel::counter />
+    </div>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Recent Activity -->
         <div class="bg-white rounded-2xl shadow-lg p-6">
