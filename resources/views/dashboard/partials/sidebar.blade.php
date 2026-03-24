@@ -1,15 +1,26 @@
 <aside id="sidebar"
     class="sidebar flex flex-col sidebar-closed md:sidebar-open fixed left-0 top-0 h-full w-72 bg-white shadow-2xl z-50">
-    <div class=" p-6 text-white" style="background-color: var(--primary);">
-        <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-bold">Dashboard</h1>
-            <button id="closeSidebar" class="md:hidden text-white">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+    <div class="p-4 text-white" style="background-color: var(--primary);">
+        <div class="flex flex-row items-center gap-3">
+            @php
+                $siteLogo = \Sndpbag\AdminPanel\Models\SiteSetting::get('site_logo');
+                $siteName = \Sndpbag\AdminPanel\Models\SiteSetting::get('site_name', 'Dashboard');
+                $siteWelcome = \Sndpbag\AdminPanel\Models\SiteSetting::get('site_welcome', 'Welcome to your dashboard');
+            @endphp
+
+            @if($siteLogo)
+                <img src="{{ asset('storage/' . $siteLogo) }}" alt="Logo" class="w-12 h-12 rounded-lg object-contain bg-white p-1 flex-shrink-0">
+            @else
+                <div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                    <span class="text-xs font-bold">{{ substr($siteName, 0, 1) }}</span>
+                </div>
+            @endif
+
+            <div class="flex-1 overflow-hidden">
+                <h2 class="text-sm font-bold leading-tight truncate">{{ $siteName }}</h2>
+                <p class="text-[10px] opacity-80 truncate">{{ $siteWelcome }}</p>
+            </div>
         </div>
-        <p class="text-sm opacity-90 mt-1">Welcome to your dashboard</p>
     </div>
 
     <nav class="p-4 flex-1 overflow-y-auto 

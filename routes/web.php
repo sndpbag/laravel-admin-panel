@@ -62,6 +62,7 @@ Route::middleware('web')->group(function () {
             Route::post('/theme', [SettingsController::class, 'updateTheme'])->name('theme.update')->middleware('can:settings.theme.update');
             Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update')->middleware('can:settings.notifications.update');
             Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update')->middleware('can:settings.profile-image.update');
+            Route::post('/branding', [SettingsController::class, 'updateBranding'])->name('branding.update')->middleware('can:settings.index');
             Route::post('/backup-database', [SettingsController::class, 'backupDatabase'])->name('backup.database')->middleware('can:settings.backup.database');
             Route::post('/maintenance/toggle', [SettingsController::class, 'toggleMaintenanceMode'])->name('maintenance.toggle')->middleware('can:settings.maintenance.toggle');
             Route::post('/maintenance/update', [SettingsController::class, 'updateMaintenanceSettings'])->name('maintenance.update')->middleware('can:settings.maintenance.toggle');

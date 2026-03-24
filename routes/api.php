@@ -10,7 +10,7 @@ use Sndpbag\AdminPanel\Http\Controllers\Dashboard\DashboardController;
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('api/v1')->group(function () {
+Route::prefix('api/v1')->name('api.v1.')->group(function () {
 
     // Public Routes
     Route::post('/register', [ApiAuthController::class, 'register']);

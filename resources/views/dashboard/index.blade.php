@@ -1,7 +1,7 @@
 @extends('admin-panel::dashboard.layouts.app')
 
-@section('title', 'Dashboard - sndp-bag')
-@section('page-title', 'Your Dashboard')
+@section('title', \Sndpbag\AdminPanel\Models\SiteSetting::get('site_name', 'Dashboard') . ' - sndp-bag')
+@section('page-title', \Sndpbag\AdminPanel\Models\SiteSetting::get('dashboard_welcome', 'Welcome back!'))
 
 @section('content')
 <div class="breadcrumb-nav">

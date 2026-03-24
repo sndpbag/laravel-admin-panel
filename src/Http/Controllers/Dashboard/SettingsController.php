@@ -201,6 +201,47 @@ class SettingsController extends Controller
     }
 
     /**
+     * Update General Branding Settings
+     */
+    public function updateBranding(Request $request)
+    {
+        $validated = $request->validate([
+            'site_name' => 'nullable|string|max:255',
+            'site_welcome' => 'nullable|string|max:255',
+            'dashboard_welcome' => 'nullable|string|max:255',
+            'site_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->has('site_name')) {
+            SiteSetting::set('site_name', $request->site_name);
+        }
+
+        if ($request->has('site_welcome')) {
+            SiteSetting::set('site_welcome', $request->site_welcome);
+        }
+
+        if ($request->has('dashboard_welcome')) {
+            SiteSetting::set('dashboard_welcome', $request->dashboard_welcome);
+        }
+
+        if ($request->hasFile('site_logo')) {
+            $image = $request->file('site_logo');
+            $filename = 'logo_' . time() . '.' . $image->getClientOriginalExtension();
+            $path = $image->storeAs('branding', $filename, 'public');
+            
+            // Delete old logo if it exists
+            $oldLogo = SiteSetting::get('site_logo');
+            if ($oldLogo && Storage::disk('public')->exists($oldLogo)) {
+                Storage::disk('public')->delete($oldLogo);
+            }
+
+            SiteSetting::set('site_logo', $path);
+        }
+
+        return redirect()->back()->with('success', 'Branding settings updated successfully!');
+    }
+
+    /**
      * Backup database and download SQL file
      */
     public function backupDatabase()

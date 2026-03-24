@@ -38,6 +38,10 @@ Route::prefix('settings')->name('settings.')->group(function () {
     Route::post('/theme', [SettingsController::class, 'updateTheme'])->name('theme.update');
     Route::post('/notifications', [SettingsController::class, 'updateNotifications'])->name('notifications.update');
     Route::post('/profile-image', [SettingsController::class, 'updateProfileImage'])->name('profile-image.update');
+    Route::post('/branding', [SettingsController::class, 'updateBranding'])->name('branding.update');
+    Route::post('/maintenance/toggle', [SettingsController::class, 'toggleMaintenanceMode'])->name('maintenance.toggle');
+    Route::post('/maintenance/update', [SettingsController::class, 'updateMaintenanceSettings'])->name('maintenance.update');
+    Route::post('/backup', [SettingsController::class, 'backupDatabase'])->name('backup.database');
 });
 
 
