@@ -1,7 +1,6 @@
 {
     "name": "sndpbag/admin-panel",
     "description": "This is a Powerfull admin panel package for Laravel.",
-    "version": "1.1.0",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -18,7 +17,7 @@
         "jenssegers/agent": "^2.6",
         "maatwebsite/excel": "^3.1",
         "stevebauman/location": "^7.6",
-        "laravel/socialite": "*",
+        "laravel/socialite": "^5.0",
         "livewire/livewire": "^3.0",
         "laravel/sanctum": "^4.0"
     },
