@@ -57,6 +57,11 @@ This admin panel is packed with features to help you build your application fast
 -   **View Customization:** Publish and modify blade views to match your design.
 -   **Data Export:** Export user lists to PDF, CSV, or Excel.
 
+### 🛠️ Development & Assets (New!)
+-   **Tailwind CSS:** Professional setup using a local installation instead of CDN for better performance.
+-   **Vite Integration:** Modern asset bundling and minification.
+-   **Asset Publishing:** Easy-to-use command to update package styles in your project.
+
 ---
 
 ## 📦 Installation
@@ -71,7 +76,11 @@ You can install the package via Composer.
 2.  **Publish Assets and Configuration:**
     This command will publish the necessary assets (JS, CSS), configuration files, and migrations.
     ```bash
+    # Initial setup (Publish everything)
     php artisan vendor:publish --provider="Sndpbag\AdminPanel\Providers\AdminPanelServiceProvider"
+
+    # Only Update Assets (after package update)
+    php artisan vendor:publish --tag=admin-panel-assets --force
     ```
 
 3.  **Run Migrations:**
@@ -774,6 +783,32 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 
 - [Sndpbag](https://github.com/sndpbag)
 - [All Contributors](../../contributors)
+
+---
+
+## 🛠️ Development & Assets
+
+This package now uses a local **Tailwind CSS** installation instead of a CDN for better performance and production readiness.
+
+### 🎨 Customizing Styles
+If you want to modify the package's core styles:
+1. Navigate to the package root.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Make your changes in `resources/css/admin.css` or Blade files.
+4. Compile the assets:
+   ```bash
+   npm run build
+   ```
+
+### 📦 Updating Assets in Main Project
+When you update the package or change its styles, you MUST republish the assets to your main project's public folder using the `--force` flag:
+
+```bash
+php artisan vendor:publish --tag=admin-panel-assets --force
+```
 
 ---
 

@@ -19,7 +19,7 @@
     <link rel="apple-touch-icon" href="{{ asset('images/icons/icon-192x192.png') }}">
     <title>@yield('title', 'sndp-bag Dashboard')</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ asset('vendor/admin-panel/css/admin.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link

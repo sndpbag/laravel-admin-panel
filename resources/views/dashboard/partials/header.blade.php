@@ -35,7 +35,7 @@
                 <span class="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full pulse-animate"></span>
             </button>
 
-            <div class="hidden sm:flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+            <a href="{{ route('settings.index') }}" class="hidden sm:flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
                 <!-- 👤 Profile Image -->
                 <div class="relative">
                     {{-- <img
@@ -70,7 +70,7 @@
                         <p class="text-xs text-gray-500">Visitor</p>
                     @endif
                 </div>
-            </div>
+            </a>
 
             <form method="POST" action="{{ route('logout') }}" class="inline">
                 {{-- <form method="POST" action=" " class="inline"> --}}
